@@ -23,9 +23,29 @@ class Game:
 		"""
 		logger.info("Initialising game")
 		pygame.init()
+		self.running = True
+
+		self.window_width = 640
+		self.window_height = 480
+		self.window = None
+		self.create_window()
+
+	def create_window(self):
+		"""
+		Create a window to display the game in.
+		"""
+		self.window = pygame.display.set_mode((self.window_width, self.window_height))
+		pygame.display.set_caption("Doman Scale")
+		self.window.fill((0, 0, 0))
+		pygame.display.flip()
 
 	def run(self):
 		"""
 		Start the main game loop.
 		"""
 		logger.info("Running game")
+
+		while self.running:
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					self.running = False
