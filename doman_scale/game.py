@@ -7,6 +7,8 @@
 import logging
 import pygame
 
+import menu.main_menu
+
 logger = logging.getLogger("Game")
 
 class Game:
@@ -45,7 +47,5 @@ class Game:
 		"""
 		logger.info("Running game")
 
-		while self.running:
-			for event in pygame.event.get():
-				if event.type == pygame.QUIT:
-					self.running = False
+		main_menu = menu.main_menu.MainMenu(self)
+		main_menu.run()
