@@ -8,6 +8,7 @@ import logging
 import pygame
 
 import menu.main_menu
+import music.control
 import resources
 
 logger = logging.getLogger("Game")
@@ -34,6 +35,8 @@ class Game:
 		self.window_height = 480
 		self.window = None
 		self.create_window()
+
+		self.music_controller = music.control.Control()
 
 	def create_window(self):
 		"""

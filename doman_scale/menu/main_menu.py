@@ -31,7 +31,7 @@ class MainMenu:
 
 		# TODO: For now, the main menu is just for debugging the music system.
 		self.objects = [
-			menu.button.Button("Play", lambda: print("Play pressed!"), 100, 100, 440, game)
+			menu.button.Button("Play", lambda: game.music_controller.start(), 100, 100, 440, game)
 		]
 
 	def run(self):
