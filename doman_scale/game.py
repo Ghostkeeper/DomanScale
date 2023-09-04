@@ -8,8 +8,10 @@ import logging
 import pygame
 
 import menu.main_menu
+import resources
 
 logger = logging.getLogger("Game")
+
 
 class Game:
 	"""
@@ -25,6 +27,7 @@ class Game:
 		"""
 		logger.info("Initialising game")
 		pygame.init()
+		resources.load()
 		self.running = True
 
 		self.window_width = 640
