@@ -17,8 +17,15 @@ class Player:
 	controller for playback.
 	"""
 
-	def play(self) -> None:
+	def __init__(self):
+		"""
+		Construct a new music player.
+		"""
+		self.pipe_out = None
+
+	def play(self, pipe_out: "multiprocessing.connection.PipeConnection") -> None:
 		"""
 		Start the music playing.
 		"""
+		self.pipe_out = pipe_out
 		logger.info("Starting music playback.")

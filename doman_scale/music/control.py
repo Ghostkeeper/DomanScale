@@ -25,8 +25,9 @@ class Control:
 		Creates the controller, starting a separate process that will listen to queues to make music.
 		"""
 		self.player = music.player.Player()
-		start_music = lambda: self.player.play()
-		self.process = multiprocessing.Process(target=start_music)
+		pipe_out, pipe_in = multiprocessing.Pipe(duplex=False)
+		start_music = lambda pipe_out: self.player.play(pipe_out)
+		self.process = multiprocessing.Process(target=start_music, args=(pipe_out, ))
 
 	def start(self):
 		self.process.start()
