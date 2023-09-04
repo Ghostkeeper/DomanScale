@@ -8,6 +8,8 @@ import logging
 import pygame
 import typing
 
+import menu.button
+
 if typing.TYPE_CHECKING:
 	import game
 
@@ -28,7 +30,9 @@ class MainMenu:
 		self.running = True
 
 		# TODO: For now, the main menu is just for debugging the music system.
-		pygame.draw.rect(game.window, (255, 255, 255), (100, 100, 440, 100))
+		self.objects = [
+			menu.button.Button("Play", lambda: None, 100, 100, 440, game)
+		]
 
 	def run(self):
 		"""
@@ -38,4 +42,6 @@ class MainMenu:
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					self.running = False
+			for object in self.objects:
+				object.draw()
 			pygame.display.update()
