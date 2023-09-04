@@ -45,3 +45,18 @@ class Button:
 		pygame.draw.rect(self.game.window, (255, 255, 255), (self.position_x, self.position_y, self.width, 100))
 		# Draw text in the middle.
 		self.game.window.blit(self.text_image, (self.position_x + self.width / 2 - self.text_rect.width / 2, self.position_y + 100 / 2 - self.text_rect.height / 2))
+
+	def event(self, event: pygame.event.Event) -> bool:
+		"""
+		Attempt to handle a game event.
+
+		If the event needs to get swallowed by this button (the button is clicked) then `True` will be returned.
+		:param event: The game event that occurred.
+		:return: Whether the event is handled now by this button, and should be discarded for the rest.
+		"""
+		if event.type != pygame.MOUSEBUTTONUP:
+			return False  # Not a mouse button press.
+		click_position = pygame.mouse.get_pos()
+		if click_position[0] < self.position_x or click_position[1] < self.position_y or click_position[0] >= self.position_x + self.width or click_position[1] >= self.position_y + 100:
+			return False  # Outside of button bounds.
+		self.action()

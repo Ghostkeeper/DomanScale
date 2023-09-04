@@ -31,7 +31,7 @@ class MainMenu:
 
 		# TODO: For now, the main menu is just for debugging the music system.
 		self.objects = [
-			menu.button.Button("Play", lambda: None, 100, 100, 440, game)
+			menu.button.Button("Play", lambda: print("Play pressed!"), 100, 100, 440, game)
 		]
 
 	def run(self):
@@ -42,6 +42,10 @@ class MainMenu:
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					self.running = False
+				for object in self.objects:
+					if object.event(event):
+						break  # Event was handled by this object and shouldn't be handled again.
+
 			for object in self.objects:
 				object.draw()
 			pygame.display.update()
