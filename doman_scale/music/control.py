@@ -5,6 +5,7 @@
 # You should have received a copy of the GNU Affero General Public License along with this application. If not, see <https://gnu.org/licenses/>.
 
 import multiprocessing
+import pygame.mixer
 
 import music.player
 
@@ -24,6 +25,7 @@ class Control:
 		"""
 		Creates the controller, starting a separate process that will listen to queues to make music.
 		"""
+		pygame.mixer.music.set_soundfont("airfont.sf2")
 		self.player = music.player.Player()
 		pipe_out, pipe_in = multiprocessing.Pipe(duplex=False)
 		start_music = lambda pipe_out: self.player.play(pipe_out)
