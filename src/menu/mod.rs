@@ -6,12 +6,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this application. If not, see <https://gnu.org/licenses/>.
  */
 
-use bevy::app::{App, Update};
+//! This module holds the logic for the main game menu.
 
-mod menu;
-
-fn main() {
-    App::new()
-        .add_systems(Update, menu::menu_system::menu_system)
-        .run();
-}
+pub mod menu_system;
