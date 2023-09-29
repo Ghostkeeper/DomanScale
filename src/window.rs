@@ -6,25 +6,21 @@
  * You should have received a copy of the GNU Affero General Public License along with this application. If not, see <https://gnu.org/licenses/>.
  */
 
-use bevy::a11y::AccessibilityPlugin;
-use bevy::app::{App, Update};
-use bevy::input::InputPlugin;
-use bevy::winit::WinitPlugin;
-use bevy::MinimalPlugins;
+//! Managing the game's window.
 
-mod menu;
-mod window;
+use bevy::window::{PresentMode, Window, WindowPlugin};
 
-/// Creates an app with the correct plug-ins and systems, and starts it.
-fn main() {
-    App::new()
-        .add_plugins((
-            MinimalPlugins,
-            AccessibilityPlugin,
-            InputPlugin::default(),
-            window::window_plugin(),
-            WinitPlugin::default()
-        ))
-        .add_systems(Update, menu::menu_system::menu_system)
-        .run();
+/// Gives a `WindowPlugin` with the correct settings for this game.
+///
+/// This sets the title, resolution and v-sync mode of the window.
+pub fn window_plugin() -> WindowPlugin {
+	WindowPlugin {
+		primary_window: Some(Window {
+			title: "Doman Scale".into(),
+			resolution: (600.0, 400.0).into(),
+			present_mode: PresentMode::AutoVsync,
+			..Default::default()
+		}),
+		..Default::default()
+	}
 }
