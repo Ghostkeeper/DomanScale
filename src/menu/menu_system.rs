@@ -10,7 +10,8 @@ use bevy::ecs::system::Commands;
 use bevy::core_pipeline::core_2d::Camera2dBundle;
 use bevy::hierarchy::BuildChildren;
 use bevy::render::color::Color;
-use bevy::ui::node_bundles::{ButtonBundle, NodeBundle};
+use bevy::text::TextStyle;
+use bevy::ui::node_bundles::{ButtonBundle, NodeBundle, TextBundle};
 use bevy::ui::{AlignItems, JustifyContent, Style, Val};
 
 /// System that renders and updates the menu.
@@ -41,6 +42,15 @@ pub fn create_menu(mut commands: Commands) {
 			},
 			background_color: Color::rgb(0.5, 0.0, 0.0).into(),
 			..Default::default()
+		}).with_children(|parent| {
+			parent.spawn(TextBundle::from_section(
+				"Play",
+				TextStyle {
+					font_size: 40.0,
+					color: Color::WHITE,
+					..Default::default()
+				}
+			));
 		});
 	});
 }
