@@ -8,4 +8,6 @@
 
 //! This module holds the logic for the main game menu.
 
-pub mod menu_system;
+pub mod menu_plugin;
+
+mod menu_system;

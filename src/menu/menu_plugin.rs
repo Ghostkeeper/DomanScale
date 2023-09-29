@@ -6,18 +6,16 @@
  * You should have received a copy of the GNU Affero General Public License along with this application. If not, see <https://gnu.org/licenses/>.
  */
 
-use bevy::app::{App, PluginGroup};
-use bevy::DefaultPlugins;
+use bevy::app::{App, Plugin, Startup, Update};
 
-mod menu;
-mod window;
+use crate::menu::menu_system;
 
-/// Creates an app with the correct plug-ins and systems, and starts it.
-fn main() {
-    App::new()
-        .add_plugins((
-            DefaultPlugins.set(window::window_plugin()),
-            menu::menu_plugin::MenuPlugin
-        ))
-        .run();
+/// A plug-in that creates and runs the main menu.
+pub struct MenuPlugin;
+
+impl Plugin for MenuPlugin {
+	fn build(&self, app: &mut App) {
+        app.add_systems(Update, menu_system::menu_system);
+		app.add_systems(Startup, menu_system::create_menu);
+	}
 }
