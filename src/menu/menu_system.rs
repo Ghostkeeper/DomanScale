@@ -9,10 +9,10 @@
 use bevy::ecs::system::Commands;
 use bevy::core_pipeline::core_2d::Camera2dBundle;
 use bevy::hierarchy::BuildChildren;
-use bevy::render::color::Color;
-use bevy::text::TextStyle;
-use bevy::ui::node_bundles::{ButtonBundle, NodeBundle, TextBundle};
+use bevy::ui::node_bundles::NodeBundle;
 use bevy::ui::{AlignItems, JustifyContent, Style, Val};
+
+use crate::menu::button;
 
 /// System that renders and updates the menu.
 pub fn menu_system() {
@@ -31,26 +31,5 @@ pub fn create_menu(mut commands: Commands) {
 			..Default::default()
 		},
 		..Default::default()
-	}).with_children(|parent| {
-		parent.spawn(ButtonBundle {
-			style: Style {
-				width: Val::Px(150.0),
-				height: Val::Px(65.0),
-				justify_content: JustifyContent::Center,
-				align_items: AlignItems::Center,
-				..Default::default()
-			},
-			background_color: Color::rgb(0.5, 0.0, 0.0).into(),
-			..Default::default()
-		}).with_children(|parent| {
-			parent.spawn(TextBundle::from_section(
-				"Play",
-				TextStyle {
-					font_size: 40.0,
-					color: Color::WHITE,
-					..Default::default()
-				}
-			));
-		});
-	});
+	}).with_children(|parent| { button::construct_button(parent, "Play"); });
 }

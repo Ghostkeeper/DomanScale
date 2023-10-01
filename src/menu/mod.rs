@@ -10,4 +10,5 @@
 
 pub mod menu_plugin;
 
+mod button;
 mod menu_system;
