@@ -6,20 +6,18 @@
  * You should have received a copy of the GNU Affero General Public License along with this application. If not, see <https://gnu.org/licenses/>.
  */
 
-use bevy::app::{App, PluginGroup};
-use bevy::DefaultPlugins;
+//! Define a plug-in that plays music during the game.
 
-mod menu;
-mod music;
-mod window;
+use bevy::app::{App, Plugin, Update};
 
-/// Creates an app with the correct plug-ins and systems, and starts it.
-fn main() {
-    App::new()
-        .add_plugins((
-            DefaultPlugins.set(window::window_plugin()),
-            menu::plugin::MenuPlugin,
-            music::plugin::MusicPlugin
-        ))
-        .run();
+use crate::music::{events, control};
+
+/// A plug-in that plays music during the game.
+pub struct MusicPlugin;
+
+impl Plugin for MusicPlugin {
+	fn build(&self, app: &mut App) {
+		app.add_event::<events::PlayMusic>();
+        app.add_systems(Update, control::play);
+	}
 }

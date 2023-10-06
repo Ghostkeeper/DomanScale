@@ -6,20 +6,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this application. If not, see <https://gnu.org/licenses/>.
  */
 
-use bevy::app::{App, PluginGroup};
-use bevy::DefaultPlugins;
+use bevy::ecs::event::Event;
 
-mod menu;
-mod music;
-mod window;
-
-/// Creates an app with the correct plug-ins and systems, and starts it.
-fn main() {
-    App::new()
-        .add_plugins((
-            DefaultPlugins.set(window::window_plugin()),
-            menu::plugin::MenuPlugin,
-            music::plugin::MusicPlugin
-        ))
-        .run();
-}
+#[derive(Event)]
+pub struct PlayMusic;

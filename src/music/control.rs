@@ -6,20 +6,15 @@
  * You should have received a copy of the GNU Affero General Public License along with this application. If not, see <https://gnu.org/licenses/>.
  */
 
-use bevy::app::{App, PluginGroup};
-use bevy::DefaultPlugins;
+//! Provides systems to control the music playback.
 
-mod menu;
-mod music;
-mod window;
+use bevy::ecs::event::EventReader;
 
-/// Creates an app with the correct plug-ins and systems, and starts it.
-fn main() {
-    App::new()
-        .add_plugins((
-            DefaultPlugins.set(window::window_plugin()),
-            menu::plugin::MenuPlugin,
-            music::plugin::MusicPlugin
-        ))
-        .run();
+use crate::music::events::PlayMusic;
+
+pub fn play(mut playmusic: EventReader<PlayMusic>) {
+	if !playmusic.is_empty() {
+		playmusic.clear();
+		println!("Start music playback.");
+	}
 }
