@@ -6,9 +6,8 @@
  * You should have received a copy of the GNU Affero General Public License along with this application. If not, see <https://gnu.org/licenses/>.
  */
 
-use bevy::ecs::event::EventWriter;
 use bevy::ecs::query::{Changed, With};
-use bevy::ecs::system::{Commands, Query};
+use bevy::ecs::system::{Commands, Query, ResMut};
 use bevy::core_pipeline::core_2d::Camera2dBundle;
 use bevy::hierarchy::{BuildChildren, Children};
 use bevy::log::{debug, trace};
@@ -18,16 +17,16 @@ use bevy::ui::widget::Button;
 use bevy::ui::{AlignItems, Interaction, JustifyContent, Style, Val};
 
 use crate::menu::button;
-use crate::music::events;
+use crate::music::state::State;
 
 /// System that renders and updates the menu.
-pub fn menu_system(mut interaction_query: Query<(&Interaction, &Children), (Changed<Interaction>, With<Button>)>, text_query: Query<&mut Text>, mut playmusic: EventWriter<events::PlayMusic>) {
+pub fn menu_system(mut interaction_query: Query<(&Interaction, &Children), (Changed<Interaction>, With<Button>)>, text_query: Query<&mut Text>, mut music_state: ResMut<State>) {
 	for (interaction, children) in &mut interaction_query {
 		let text: &str = &text_query.get(children[0]).unwrap().sections[0].value;
 		match *interaction {
 			Interaction::Pressed => {
 				trace!("Pressed menu button: {}", text);
-				playmusic.send(events::PlayMusic);
+				music_state.playing = true;
 			}
 			_ => {}
 		}
