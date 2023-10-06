@@ -9,13 +9,16 @@
 //! Provides systems to control the music playback.
 
 use bevy::ecs::event::EventReader;
+use bevy::ecs::system::ResMut;
 use bevy::log::info;
 
 use crate::music::events::PlayMusic;
+use crate::music::state::State;
 
-pub fn play(mut playmusic: EventReader<PlayMusic>) {
+pub fn play(mut playmusic: EventReader<PlayMusic>, mut state: ResMut<State>) {
 	if !playmusic.is_empty() {
 		playmusic.clear();
 		info!("Start music playback.");
+		state.playing = true;
 	}
 }

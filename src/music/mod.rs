@@ -19,6 +19,7 @@
 //! with a nice transition towards it to keep the music going. Other controls, like volume, do get
 //! applied immediately.
 
-pub mod control;
+mod control;
 pub mod events;
 pub mod plugin;
+mod state;

@@ -6,25 +6,21 @@
  * You should have received a copy of the GNU Affero General Public License along with this application. If not, see <https://gnu.org/licenses/>.
  */
 
-use bevy::app::{App, Plugin, Startup, Update};
-use bevy::ecs::system::Commands;
+use bevy::ecs::system::Resource;
 
-use crate::music::control;
-use crate::music::events::PlayMusic;
-use crate::music::state::State;
-
-/// A plug-in that plays music during the game.
-pub struct MusicPlugin;
-
-impl Plugin for MusicPlugin {
-	fn build(&self, app: &mut App) {
-		app.add_event::<PlayMusic>();
-		app.add_systems(Update, control::play);
-		app.add_systems(Startup, initialise);
-	}
+/// Defines the current state of the music playback.
+///
+/// These are controlled from the control module. The control module adjusts the state, and the
+/// player then reads the state to adjust the type of music being played.
+#[derive(Resource)]
+pub struct State {
+	pub playing: bool
 }
 
-/// Initialise the music resources.
-fn initialise(mut commands: Commands) {
-	commands.init_resource::<State>();
+impl Default for State {
+	fn default() -> Self {
+		Self {
+			playing: false
+		}
+	}
 }
