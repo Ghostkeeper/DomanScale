@@ -8,14 +8,14 @@
 
 use bevy::app::{App, Plugin, Startup, Update};
 
-use crate::menu::menu_system;
+use crate::menu::system;
 
 /// A plug-in that creates and runs the main menu.
 pub struct MenuPlugin;
 
 impl Plugin for MenuPlugin {
 	fn build(&self, app: &mut App) {
-        app.add_systems(Update, menu_system::menu_system);
-		app.add_systems(Startup, menu_system::create_menu);
+        app.add_systems(Update, system::menu_system);
+		app.add_systems(Startup, system::create_menu);
 	}
 }
