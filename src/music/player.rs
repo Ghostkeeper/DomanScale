@@ -6,28 +6,23 @@
  * You should have received a copy of the GNU Affero General Public License along with this application. If not, see <https://gnu.org/licenses/>.
  */
 
-use bevy::app::{App, Plugin, Update, Startup};
-use bevy::ecs::system::Commands;
-use bevy::time::{Timer, TimerMode};
-use std::time::Duration;
+use bevy::log::trace;
+use bevy::ecs::system::{Res, ResMut, Resource};
+use bevy::time::{Time, Timer};
 
-use crate::music::player::{BeatTime, play};
 use crate::music::state::State;
 
-/// A plug-in that plays music during the game.
-pub struct MusicPlugin;
-
-impl Plugin for MusicPlugin {
-	fn build(&self, app: &mut App) {
-		app.add_systems(Startup, initialise);
-		app.add_systems(Update, play);
-	}
+#[derive(Resource)]
+pub struct BeatTime {
+	/// How often should a new beat trigger? Determines the BPM of the music.
+	pub timer: Timer
 }
 
-/// Initialise the music resources.
-fn initialise(mut commands: Commands) {
-	commands.init_resource::<State>();
-	commands.insert_resource(BeatTime {
-		timer: Timer::new(Duration::from_secs(1), TimerMode::Repeating)
-	})
+pub fn play(state: Res<State>, mut beat_time: ResMut<BeatTime>, time: Res<Time>) {
+	if state.playing {
+		beat_time.timer.tick(time.delta());
+	}
+	if beat_time.timer.finished() {
+		trace!("Beat!");
+	}
 }
