@@ -17,7 +17,7 @@ fn main() {
     App::new()
         .add_plugins((
             DefaultPlugins.set(window::window_plugin()),
-            menu::menu_plugin::MenuPlugin
+            menu::plugin::MenuPlugin
         ))
         .run();
 }

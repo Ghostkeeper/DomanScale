@@ -8,7 +8,7 @@
 
 //! This module holds the logic for the main game menu.
 
-pub mod menu_plugin;
+pub mod plugin;
 
 mod button;
 mod menu_system;
