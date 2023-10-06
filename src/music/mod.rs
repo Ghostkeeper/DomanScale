@@ -23,3 +23,4 @@ pub mod plugin;
 pub mod state;
 
 mod player;
+mod synth;

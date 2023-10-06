@@ -11,6 +11,7 @@ use bevy::ecs::system::{Res, ResMut, Resource};
 use bevy::time::{Time, Timer};
 
 use crate::music::state::State;
+use crate::music::synth::Synth;
 
 #[derive(Resource)]
 pub struct BeatTime {
@@ -18,11 +19,12 @@ pub struct BeatTime {
 	pub timer: Timer
 }
 
-pub fn play(state: Res<State>, mut beat_time: ResMut<BeatTime>, time: Res<Time>) {
+pub fn play(state: Res<State>, mut beat_time: ResMut<BeatTime>, time: Res<Time>, mut synth: ResMut<Synth>) {
 	if state.playing {
 		beat_time.timer.tick(time.delta());
 	}
 	if beat_time.timer.finished() {
-		trace!("Beat!");
+		println!("Beat!");
+		synth.synth.lock().unwrap().note_on(0, 60, 100);
 	}
 }
