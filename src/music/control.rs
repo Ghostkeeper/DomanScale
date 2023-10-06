@@ -9,12 +9,13 @@
 //! Provides systems to control the music playback.
 
 use bevy::ecs::event::EventReader;
+use bevy::log::info;
 
 use crate::music::events::PlayMusic;
 
 pub fn play(mut playmusic: EventReader<PlayMusic>) {
 	if !playmusic.is_empty() {
 		playmusic.clear();
-		println!("Start music playback.");
+		info!("Start music playback.");
 	}
 }

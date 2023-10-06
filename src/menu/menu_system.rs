@@ -11,6 +11,7 @@ use bevy::ecs::query::{Changed, With};
 use bevy::ecs::system::{Commands, Query};
 use bevy::core_pipeline::core_2d::Camera2dBundle;
 use bevy::hierarchy::{BuildChildren, Children};
+use bevy::log::{debug, trace};
 use bevy::text::Text;
 use bevy::ui::node_bundles::NodeBundle;
 use bevy::ui::widget::Button;
@@ -25,7 +26,7 @@ pub fn menu_system(mut interaction_query: Query<(&Interaction, &Children), (Chan
 		let text: &str = &text_query.get(children[0]).unwrap().sections[0].value;
 		match *interaction {
 			Interaction::Pressed => {
-				println!("Pressed button.");
+				trace!("Pressed menu button: {}", text);
 				playmusic.send(events::PlayMusic);
 			}
 			_ => {}
@@ -35,7 +36,7 @@ pub fn menu_system(mut interaction_query: Query<(&Interaction, &Children), (Chan
 
 /// Construct the menu buttons.
 pub fn create_menu(mut commands: Commands) {
-	println!("Creating menu");
+	debug!("Creating menu");
 	commands.spawn(Camera2dBundle::default());
 	commands.spawn(NodeBundle {
 		style: Style {
