@@ -11,17 +11,15 @@ use std::fs::File;
 use std::sync::{Arc, Mutex};
 use rustysynth::{SoundFont, Synthesizer, SynthesizerSettings};
 
-/// The synthesizer that generates waveform audio from MIDI music notes.
+/// This resource wraps the synthesizer so that it can be called from as a resource to trigger music
+/// to play.
+///
+/// The synthesizer is wrapped in a mutex lock so that it can be used to generate music, while other
+/// threads can still add new MIDI events to be played.
 #[derive(Resource)]
 pub struct Synth {
 	/// The Rustysynth synthesizer.
-	pub synth: Arc<Mutex<Synthesizer>>,
-
-	/// The audio buffer for the left channel to synthesize into.
-	pub left_buffer: Arc<Mutex<Vec<f32>>>,
-
-	/// The audio buffer for the right channel to synthesize into.
-	pub right_buffer: Arc<Mutex<Vec<f32>>>,
+	pub synth: Arc<Mutex<Synthesizer>>
 }
 
 impl Default for Synth {
@@ -30,9 +28,7 @@ impl Default for Synth {
 		let sound_font = Arc::new(SoundFont::new(&mut sf2).unwrap());
 		let settings = SynthesizerSettings::new(44100);
 		Self {
-			synth: Arc::new(Mutex::new(Synthesizer::new(&sound_font, &settings).unwrap())),
-			left_buffer: Arc::new(Mutex::new(vec![0_f32; 4410])),
-			right_buffer: Arc::new(Mutex::new(vec![0_f32; 4410]))
+			synth: Arc::new(Mutex::new(Synthesizer::new(&sound_font, &settings).unwrap()))
 		}
 	}
 }

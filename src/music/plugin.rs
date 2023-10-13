@@ -43,14 +43,14 @@ fn initialise(mut commands: Commands) {
 		channel_sample_count: 4410 //Buffer size.
 	};
 	let synth = synth_resource.synth.clone();
-	let left_buffer = synth_resource.left_buffer.clone();
-	let right_buffer = synth_resource.right_buffer.clone();
 	//Create a thread that infinitely keeps rendering (as long as the parent process runs).
 	thread::spawn(move || {
+		let mut left_buffer = vec![0_f32; params.channel_sample_count];
+		let mut right_buffer = vec![0_f32; params.channel_sample_count];
 		let _device = run_output_device(params, {
 			move |data| {
-				synth.lock().unwrap().render(&mut left_buffer.lock().unwrap()[..], &mut right_buffer.lock().unwrap()[..]);
-				for (i, value) in left_buffer.lock().unwrap().iter().interleave(right_buffer.lock().unwrap().iter()).enumerate() {
+				synth.lock().unwrap().render(&mut left_buffer[..], &mut right_buffer[..]);
+				for (i, value) in left_buffer.iter().interleave(right_buffer.iter()).enumerate() {
 					data[i] = *value;
 				}
 			}
