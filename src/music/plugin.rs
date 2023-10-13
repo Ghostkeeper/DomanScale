@@ -7,11 +7,10 @@
  */
 
 use bevy::app::{App, Plugin, Update, Startup};
-use bevy::ecs::system::{Commands, ResMut};
+use bevy::ecs::system::Commands;
 use bevy::time::{Timer, TimerMode};
 use itertools::Itertools;
-use rustysynth::Synthesizer;
-use std::sync::{Arc, Mutex};
+use std::thread;
 use std::time::Duration;
 use tinyaudio::{OutputDeviceParameters, run_output_device};
 
@@ -36,6 +35,7 @@ fn initialise(mut commands: Commands) {
 		timer: Timer::new(Duration::from_secs(1), TimerMode::Repeating)
 	});
 
+	//Create the Synth resource and start rendering with it.
 	let synth_resource = Synth::default();
 	let params = OutputDeviceParameters {
 		channels_count: 2,
@@ -45,13 +45,20 @@ fn initialise(mut commands: Commands) {
 	let synth = synth_resource.synth.clone();
 	let left_buffer = synth_resource.left_buffer.clone();
 	let right_buffer = synth_resource.right_buffer.clone();
-	let _device = run_output_device(params, {
-		move |data| {
-			synth.lock().unwrap().render(&mut left_buffer.lock().unwrap()[..], &mut right_buffer.lock().unwrap()[..]);
-			for (i, value) in left_buffer.lock().unwrap().iter().interleave(right_buffer.lock().unwrap().iter()).enumerate() {
-				data[i] = *value;
+	//Create a thread that infinitely keeps rendering (as long as the parent process runs).
+	thread::spawn(move || {
+		let _device = run_output_device(params, {
+			move |data| {
+				synth.lock().unwrap().render(&mut left_buffer.lock().unwrap()[..], &mut right_buffer.lock().unwrap()[..]);
+				for (i, value) in left_buffer.lock().unwrap().iter().interleave(right_buffer.lock().unwrap().iter()).enumerate() {
+					data[i] = *value;
+				}
 			}
+		}).unwrap();
+		//Run this thread indefinitely, because the output device can't move threads and needs to stay existing.
+		loop {
+			thread::sleep(Duration::from_secs(60));
 		}
-	}).unwrap();
+	});
 	commands.insert_resource(synth_resource);
 }

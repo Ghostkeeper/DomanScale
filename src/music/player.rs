@@ -6,7 +6,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this application. If not, see <https://gnu.org/licenses/>.
  */
 
-use bevy::log::trace;
 use bevy::ecs::system::{Res, ResMut, Resource};
 use bevy::time::{Time, Timer};
 
@@ -19,12 +18,11 @@ pub struct BeatTime {
 	pub timer: Timer
 }
 
-pub fn play(state: Res<State>, mut beat_time: ResMut<BeatTime>, time: Res<Time>, mut synth: ResMut<Synth>) {
+pub fn play(state: Res<State>, mut beat_time: ResMut<BeatTime>, time: Res<Time>, synth: Res<Synth>) {
 	if state.playing {
 		beat_time.timer.tick(time.delta());
 	}
 	if beat_time.timer.finished() {
-		println!("Beat!");
 		synth.synth.lock().unwrap().note_on(0, 60, 100);
 	}
 }
