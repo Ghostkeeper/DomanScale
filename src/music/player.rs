@@ -50,21 +50,26 @@ impl<'a, T> Iterator for TryIterResult<'a, T> {
 /// This assumes that the notes in the receiver are ordered by their time instant. If they are not,
 /// some notes may be skipped.
 pub fn play(receiver: &mut Receiver<Note>, time: u32, synth: Arc<Mutex<Synthesizer>>) {
-	match try_iter_result(receiver).peekable().peek() {
-		Some(Ok(note)) => {
-			if note.time == time {
-				println!("Play note!");
-				synth.lock().unwrap().note_on(0, 60, 100); //TODO: Play that note.
-				_ = receiver.recv(); //Remove this note. It successfully played.
+	loop {
+		match try_iter_result(receiver).peekable().peek() {
+			Some(Ok(note)) => {
+				if note.time > time {
+					return; //Next note is in the future. Need to wait a while, until we're called with that time.
+				}
+				if note.time == time {
+					println!("Play note!");
+					synth.lock().unwrap().note_on(0, 60, 100); //TODO: Play that note.
+					_ = receiver.recv(); //Remove this note. It successfully played.
+				}
+			},
+			Some(Err(_)) => {
+				//No notes in the queue right now. Wait for notes.
+				return;
+			},
+			None => {
+				//Channel got disconnected. We're probably closing the application then.
+				return;
 			}
-		},
-		Some(Err(_)) => {
-			//No notes in the queue right now. Wait for notes.
-			return;
-		},
-		None => {
-			//Channel got disconnected. We're probably closing the application then.
-			return;
 		}
 	}
 }

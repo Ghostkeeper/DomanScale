@@ -56,6 +56,13 @@ pub struct Note {
 	/// stopped when the next note is played.
 	pub duration: u32,
 
+	/// How loud to play this note.
+	///
+	/// This is the velocity parameter of the MIDI note. Mostly this determines the volume of the
+	/// note, but to be precise it is the velocity of the attack of the note (and sustain in many
+	/// other instruments too). Like, how hard the guitar string is plucked.
+	pub velocity: u8,
+
 	/// Which channel the note gets played on.
 	///
 	/// The channel determines the instrument that the note gets played with. Channels 10 and 16 are
