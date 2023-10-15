@@ -22,4 +22,5 @@
 pub mod plugin;
 pub mod state;
 
+mod note;
 mod player;

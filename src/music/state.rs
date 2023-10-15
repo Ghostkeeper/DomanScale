@@ -7,6 +7,10 @@
  */
 
 use bevy::ecs::system::Resource;
+use std::sync::{Arc, Mutex};
+use std::sync::mpsc::Sender;
+
+use crate::music::note::Note;
 
 /// Defines the current state of the music playback.
 ///
@@ -14,13 +18,9 @@ use bevy::ecs::system::Resource;
 /// player then reads the state to adjust the type of music being played.
 #[derive(Resource)]
 pub struct State {
-	pub playing: bool
-}
+	/// Whether the music system is currently running.
+	pub playing: bool,
 
-impl Default for State {
-	fn default() -> Self {
-		Self {
-			playing: false
-		}
-	}
+	/// A channel through which to send notes to be played.
+	pub transmit: Sender<Note>
 }

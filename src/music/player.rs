@@ -7,18 +7,64 @@
  */
 
 use bevy::ecs::system::{Res, ResMut, Resource};
-use bevy::time::{Time, Timer};
+use bevy::log::error;
+use rustysynth::Synthesizer;
+use std::sync::{Arc, Mutex};
+use std::sync::mpsc::{Receiver, TryRecvError};
 
-use crate::music::state::State;
+use crate::music::note::Note;
 
-#[derive(Resource)]
-pub struct BeatTime {
-	/// How often should a new beat trigger? Determines the BPM of the music.
-	pub timer: Timer
+/// Wrap a receiver in a `TryIterResult` which is peekable.
+///
+/// Taken from https://stackoverflow.com/a/59448553.
+pub fn try_iter_result<T>(rx: &Receiver<T>) -> TryIterResult<T> {
+	TryIterResult { rx: &rx }
 }
 
-pub fn play(state: Res<State>, mut beat_time: ResMut<BeatTime>, time: Res<Time>) {
-	if state.playing {
-		beat_time.timer.tick(time.delta());
+/// Wrapper around a receiver result that allows peeking on a receiver.
+///
+/// Taken from https://stackoverflow.com/a/59448553.
+pub struct TryIterResult<'a, T: 'a> {
+	/// The receiver to take the result from.
+	rx: &'a Receiver<T>,
+}
+
+impl<'a, T> Iterator for TryIterResult<'a, T> {
+	type Item = Result<T, TryRecvError>;
+
+	/// Take the next iteration from the iterator.
+	///
+	/// This keeps the distinction that normal iterators discard, between having an empty queue, and
+	/// having a queue that is disconnected from the transmitter.
+	fn next(&mut self) -> Option<Result<T, TryRecvError>> {
+		match self.rx.try_recv() {
+			Ok(data) => Some(Ok(data)),
+			Err(TryRecvError::Empty) => Some(Err(TryRecvError::Empty)),
+			Err(TryRecvError::Disconnected) => None
+		}
+	}
+}
+
+/// Play the notes in a receiver queue for this time instant.
+///
+/// This assumes that the notes in the receiver are ordered by their time instant. If they are not,
+/// some notes may be skipped.
+pub fn play(receiver: &mut Receiver<Note>, time: u32, synth: Arc<Mutex<Synthesizer>>) {
+	match try_iter_result(receiver).peekable().peek() {
+		Some(Ok(note)) => {
+			if note.time == time {
+				println!("Play note!");
+				synth.lock().unwrap().note_on(0, 60, 100); //TODO: Play that note.
+				_ = receiver.recv(); //Remove this note. It successfully played.
+			}
+		},
+		Some(Err(_)) => {
+			//No notes in the queue right now. Wait for notes.
+			return;
+		},
+		None => {
+			//Channel got disconnected. We're probably closing the application then.
+			return;
+		}
 	}
 }
