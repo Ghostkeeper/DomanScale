@@ -10,13 +10,16 @@ use bevy::app::{App, Plugin, Update, Startup};
 use bevy::ecs::system::Commands;
 use bevy::time::{Timer, TimerMode};
 use itertools::Itertools;
+use rustysynth::{SoundFont, Synthesizer, SynthesizerSettings};
+use spin_sleep::LoopHelper;
+use std::fs::File;
+use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 use tinyaudio::{OutputDeviceParameters, run_output_device};
 
 use crate::music::player::{BeatTime, play};
 use crate::music::state::State;
-use crate::music::synth::Synth;
 
 /// A plug-in that plays music during the game.
 pub struct MusicPlugin;
@@ -28,28 +31,32 @@ impl Plugin for MusicPlugin {
 	}
 }
 
-/// Initialise the music resources.
+/// Initialise the music resources and start outputting to the sound device.
 fn initialise(mut commands: Commands) {
 	commands.init_resource::<State>();
 	commands.insert_resource(BeatTime {
 		timer: Timer::new(Duration::from_secs(1), TimerMode::Repeating)
 	});
 
+	//Create a synthesizer.
+	let mut sf2 = File::open("airfont.sf2").unwrap();
+	let sound_font = Arc::new(SoundFont::new(&mut sf2).unwrap());
+	let settings = SynthesizerSettings::new(44100);
+	let synth = Arc::new(Mutex::new(Synthesizer::new(&sound_font, &settings).unwrap()));
 	//Create the Synth resource and start rendering with it.
-	let synth_resource = Synth::default();
 	let params = OutputDeviceParameters {
 		channels_count: 2,
 		sample_rate: 44100,
 		channel_sample_count: 4410 //Buffer size.
 	};
-	let synth = synth_resource.synth.clone();
+	let synth_arc_copy = synth.clone(); //Clone the Arc.
 	//Create a thread that infinitely keeps rendering (as long as the parent process runs).
 	thread::spawn(move || {
 		let mut left_buffer = vec![0_f32; params.channel_sample_count];
 		let mut right_buffer = vec![0_f32; params.channel_sample_count];
 		let _device = run_output_device(params, {
 			move |data| {
-				synth.lock().unwrap().render(&mut left_buffer[..], &mut right_buffer[..]);
+				synth_arc_copy.lock().unwrap().render(&mut left_buffer[..], &mut right_buffer[..]);
 				for (i, value) in left_buffer.iter().interleave(right_buffer.iter()).enumerate() {
 					data[i] = *value;
 				}
@@ -60,5 +67,14 @@ fn initialise(mut commands: Commands) {
 			thread::sleep(Duration::from_secs(60));
 		}
 	});
-	commands.insert_resource(synth_resource);
+	//Create a thread that continuously reads from a note buffer to render the images in the synthesizer.
+	thread::spawn(move || {
+		let rate = 120.0 / 60.0 * 16.0; //120BPM, with 16-sub-beat intervals.
+		let mut loop_helper = LoopHelper::builder().build_with_target_rate(rate);
+		loop {
+			loop_helper.loop_start();
+			synth.lock().unwrap().note_on(0, 60, 100);
+			loop_helper.loop_sleep(); //Limit the loop rate.
+		}
+	});
 }
