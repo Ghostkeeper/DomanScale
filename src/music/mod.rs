@@ -22,5 +22,6 @@
 pub mod plugin;
 pub mod state;
 
+mod midi_message;
 mod note;
 mod player;

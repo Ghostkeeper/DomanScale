@@ -6,13 +6,12 @@
  * You should have received a copy of the GNU Affero General Public License along with this application. If not, see <https://gnu.org/licenses/>.
  */
 
-use bevy::ecs::system::{Res, ResMut, Resource};
-use bevy::log::error;
+use bevy::ecs::system::{ResMut, Resource};
 use rustysynth::Synthesizer;
 use std::sync::{Arc, Mutex};
 use std::sync::mpsc::{Receiver, TryRecvError};
 
-use crate::music::note::Note;
+use crate::music::midi_message::MidiMessage;
 
 /// Wrap a receiver in a `TryIterResult` which is peekable.
 ///
@@ -45,18 +44,18 @@ impl<'a, T> Iterator for TryIterResult<'a, T> {
 	}
 }
 
-/// Play the notes in a receiver queue for this time instant.
+/// Play the MIDI messages in a receiver queue for this time instant.
 ///
-/// This assumes that the notes in the receiver are ordered by their time instant. If they are not,
-/// some notes may be skipped.
-pub fn play(receiver: &mut Receiver<Note>, time: u32, synth: Arc<Mutex<Synthesizer>>) {
+/// This assumes that the messages in the receiver are ordered by their time instant. If they are
+/// not, some messages may be skipped.
+pub fn play(receiver: &mut Receiver<MidiMessage>, time: u32, synth: Arc<Mutex<Synthesizer>>) {
 	loop {
 		match try_iter_result(receiver).peekable().peek() {
-			Some(Ok(note)) => {
-				if note.time > time {
+			Some(Ok(message)) => {
+				if message.time > time {
 					return; //Next note is in the future. Need to wait a while, until we're called with that time.
 				}
-				if note.time == time {
+				if message.time == time {
 					println!("Play note!");
 					synth.lock().unwrap().note_on(0, 60, 100); //TODO: Play that note.
 					_ = receiver.recv(); //Remove this note. It successfully played.

@@ -19,7 +19,7 @@ use std::thread;
 use std::time::Duration;
 use tinyaudio::{OutputDeviceParameters, run_output_device};
 
-use crate::music::note::Note;
+use crate::music::midi_message::MidiMessage;
 use crate::music::player::play;
 use crate::music::state::State;
 
@@ -29,7 +29,18 @@ pub struct MusicPlugin;
 impl Plugin for MusicPlugin {
 	fn build(&self, app: &mut App) {
 		app.add_systems(Startup, initialise);
+		app.add_systems(Update, testplay);
 	}
+}
+
+fn testplay(mut state: ResMut<State>) {
+	_ = state.transmit.send(MidiMessage{
+		time: 64,
+		channel: 0,
+		command: 0x90,
+		data1: 60,
+		data2: 100
+	});
 }
 
 /// Initialise the music resources and start outputting to the sound device.

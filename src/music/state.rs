@@ -10,7 +10,7 @@ use bevy::ecs::system::Resource;
 use std::sync::{Arc, Mutex};
 use std::sync::mpsc::Sender;
 
-use crate::music::note::Note;
+use crate::music::midi_message::MidiMessage;
 
 /// Defines the current state of the music playback.
 ///
@@ -22,5 +22,5 @@ pub struct State {
 	pub playing: bool,
 
 	/// A channel through which to send notes to be played.
-	pub transmit: Sender<Note>
+	pub transmit: Sender<MidiMessage>
 }
