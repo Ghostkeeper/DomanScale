@@ -55,8 +55,7 @@ pub fn play(receiver: &mut Receiver<MidiMessage>, time: u32, synth: Arc<Mutex<Sy
 					return; //Next note is in the future. Need to wait a while, until we're called with that time.
 				}
 				if message.time == time {
-					println!("Play note!");
-					synth.lock().unwrap().note_on(0, 60, 100); //TODO: Play that note.
+					synth.lock().unwrap().process_midi_message(message.channel, message.command, message.data1, message.data2);
 					_ = receiver.recv(); //Remove this note. It successfully played.
 				}
 			},

@@ -22,10 +22,10 @@ pub struct MidiMessage {
 	pub time: u32,
 
 	/// The channel to send the MIDI message to.
-	pub channel: u8,
+	pub channel: i32,
 
 	/// The MIDI command to send.
-	pub command: u8,
+	pub command: i32,
 
 	/// One of the data fields to send with the MIDI command. What this data field means depends on
 	/// the MIDI command:
@@ -51,7 +51,7 @@ pub struct MidiMessage {
 	///   - 0x7B: Stop all notes.
 	/// * Program Change: Which instrument to play on that channel.
 	/// * Pitch Bend: The least significant byte of the pitch bend adjustment.
-	pub data1: u8,
+	pub data1: i32,
 
 	/// One of the data fields to send with the MIDI command. What this data field means depends on
 	/// the MIDI command:
@@ -59,5 +59,5 @@ pub struct MidiMessage {
 	/// * Note Off: None, this is ignored.
 	/// * Controller: Depending on the first data field, this data field controls the magnitude of
 	/// that effect.
-	pub data2: u8,
+	pub data2: i32,
 }
