@@ -21,7 +21,7 @@ use tinyaudio::{OutputDeviceParameters, run_output_device};
 use crate::music::midi_message::MidiMessage;
 use crate::music::player::play;
 use crate::music::state::State;
-use crate::music::style::Style;
+use crate::music::style::{Style, StyleResource};
 
 /// A plug-in that plays music during the game.
 pub struct MusicPlugin;
@@ -51,8 +51,11 @@ fn initialise(mut commands: Commands) {
 		transmit: transmitter,
 		generated_up_to: 0
 	});
-	commands.insert_resource(Style {
+	let style = Arc::new(Mutex::new(Style {
 		playing: false
+	}));
+	commands.insert_resource(StyleResource {
+		style: style.clone()
 	});
 
 	//Create a synthesizer.
@@ -93,6 +96,7 @@ fn initialise(mut commands: Commands) {
 		let mut loop_helper = LoopHelper::builder().build_with_target_rate(rate);
 		loop {
 			loop_helper.loop_start();
+			generate(style.lock().unwrap(), time);
 			play(&mut receiver, time.clone(), synth.clone());
 			time += 1;
 			loop_helper.loop_sleep(); //Limit the loop rate.

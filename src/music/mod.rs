@@ -22,6 +22,7 @@
 pub mod plugin;
 pub mod style;
 
+mod generate;
 mod midi_message;
 mod note;
 mod player;

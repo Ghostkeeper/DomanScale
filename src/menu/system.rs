@@ -17,16 +17,16 @@ use bevy::ui::widget::Button;
 use bevy::ui::{AlignItems, Interaction, JustifyContent, Style, Val};
 
 use crate::menu::button;
-use crate::music;
+use crate::music::style::StyleResource;
 
 /// System that renders and updates the menu.
-pub fn menu_system(mut interaction_query: Query<(&Interaction, &Children), (Changed<Interaction>, With<Button>)>, text_query: Query<&mut Text>, mut music_style: ResMut<music::style::Style>) {
+pub fn menu_system(mut interaction_query: Query<(&Interaction, &Children), (Changed<Interaction>, With<Button>)>, text_query: Query<&mut Text>, mut music_style: ResMut<StyleResource>) {
 	for (interaction, children) in &mut interaction_query {
 		let text: &str = &text_query.get(children[0]).unwrap().sections[0].value;
 		match *interaction {
 			Interaction::Pressed => {
 				trace!("Pressed menu button: {}", text);
-				music_style.playing = true;
+				music_style.style.lock().unwrap().playing = true;
 			}
 			_ => {}
 		}

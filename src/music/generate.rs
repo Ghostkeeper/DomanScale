@@ -6,22 +6,18 @@
  * You should have received a copy of the GNU Affero General Public License along with this application. If not, see <https://gnu.org/licenses/>.
  */
 
-use bevy::ecs::system::Resource;
-use std::sync::{Arc, Mutex};
+use bevy::ecs::system::ResMut;
 
-/// A resource that holds the style in a way that it can be used from Bevy's ECS as well as from the
-/// music generation thread.
-#[derive(Resource)]
-pub struct StyleResource {
-	/// A pointer to the actual style object.
-	pub style: Arc<Mutex<Style>>
-}
+use crate::music::state::State;
+use crate::music::style::Style;
 
-/// Defines the style of the music that should be generated.
+/// Starting point of the generating of music.
 ///
-/// This resource can adjust a number of parameters related to the music style. The music generator
-/// will read these when it is time to fill up the buffer with newly generated music.
-pub struct Style {
-	/// Whether any music should be generated at all.
-	pub playing: bool
+/// The purpose of this function is to fill up the buffer of MIDI messages with enough messages to
+/// keep the music going for a while.
+///
+/// # Arguments
+/// * state: The music generation state.
+pub fn generate(style: Style, state: State, current_time: u32) {
+	if state.generated_up_to < state.time
 }
