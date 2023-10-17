@@ -7,18 +7,13 @@
  */
 
 use bevy::ecs::system::Resource;
-use std::sync::mpsc::Sender;
 
-use crate::music::midi_message::MidiMessage;
-
-/// Defines the current state of the music playback.
+/// Defines the style of the music that should be generated.
 ///
-/// Anything that the playback needs to play its music.
+/// This resource can adjust a number of parameters related to the music style. The music generator
+/// will read these when it is time to fill up the buffer with newly generated music.
 #[derive(Resource)]
-pub struct State {
-	/// A channel through which to send notes to be played.
-	pub transmit: Sender<MidiMessage>,
-
-	/// We've generated music up until this timestamp.
-	pub generated_up_to: u32
+pub struct Style {
+	/// Whether any music should be generated at all.
+	pub playing: bool
 }

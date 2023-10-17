@@ -21,6 +21,7 @@ use tinyaudio::{OutputDeviceParameters, run_output_device};
 use crate::music::midi_message::MidiMessage;
 use crate::music::player::play;
 use crate::music::state::State;
+use crate::music::style::Style;
 
 /// A plug-in that plays music during the game.
 pub struct MusicPlugin;
@@ -47,8 +48,11 @@ fn initialise(mut commands: Commands) {
 	// Create a producer/consumer channel from the state resource to the synthesizer.
 	let (transmitter, mut receiver) = channel();
 	commands.insert_resource(State {
-		playing: false,
-		transmit: transmitter
+		transmit: transmitter,
+		generated_up_to: 0
+	});
+	commands.insert_resource(Style {
+		playing: false
 	});
 
 	//Create a synthesizer.

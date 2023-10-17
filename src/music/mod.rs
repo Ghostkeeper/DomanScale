@@ -20,8 +20,9 @@
 //! applied immediately.
 
 pub mod plugin;
-pub mod state;
+pub mod style;
 
 mod midi_message;
 mod note;
 mod player;
+mod state;
