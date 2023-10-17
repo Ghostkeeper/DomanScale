@@ -6,7 +6,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this application. If not, see <https://gnu.org/licenses/>.
  */
 
-use bevy::ecs::system::{ResMut, Resource};
 use rustysynth::Synthesizer;
 use std::sync::{Arc, Mutex};
 use std::sync::mpsc::{Receiver, TryRecvError};

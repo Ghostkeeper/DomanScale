@@ -7,7 +7,6 @@
  */
 
 use bevy::ecs::system::Resource;
-use std::sync::{Arc, Mutex};
 use std::sync::mpsc::Sender;
 
 use crate::music::midi_message::MidiMessage;

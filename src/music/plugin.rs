@@ -7,8 +7,7 @@
  */
 
 use bevy::app::{App, Plugin, Update, Startup};
-use bevy::ecs::system::{Commands, ResMut};
-use bevy::time::{Timer, TimerMode};
+use bevy::ecs::system::{Commands, Res};
 use itertools::Itertools;
 use rustysynth::{SoundFont, Synthesizer, SynthesizerSettings};
 use spin_sleep::LoopHelper;
@@ -33,7 +32,7 @@ impl Plugin for MusicPlugin {
 	}
 }
 
-fn testplay(mut state: ResMut<State>) {
+fn testplay(state: Res<State>) {
 	_ = state.transmit.send(MidiMessage{
 		time: 64,
 		channel: 0,
@@ -46,7 +45,7 @@ fn testplay(mut state: ResMut<State>) {
 /// Initialise the music resources and start outputting to the sound device.
 fn initialise(mut commands: Commands) {
 	// Create a producer/consumer channel from the state resource to the synthesizer.
-	let (mut transmitter, mut receiver) = channel();
+	let (transmitter, mut receiver) = channel();
 	commands.insert_resource(State {
 		playing: false,
 		transmit: transmitter
