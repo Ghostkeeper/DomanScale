@@ -6,7 +6,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this application. If not, see <https://gnu.org/licenses/>.
  */
 
-use bevy::ecs::system::Resource;
 use std::sync::mpsc::Sender;
 
 use crate::music::midi_message::MidiMessage;
@@ -14,7 +13,6 @@ use crate::music::midi_message::MidiMessage;
 /// Defines the current state of the music playback.
 ///
 /// Anything that the playback needs to play its music.
-#[derive(Resource)]
 pub struct State {
 	/// A channel through which to send notes to be played.
 	pub transmit: Sender<MidiMessage>,

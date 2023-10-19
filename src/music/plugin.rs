@@ -6,8 +6,8 @@
  * You should have received a copy of the GNU Affero General Public License along with this application. If not, see <https://gnu.org/licenses/>.
  */
 
-use bevy::app::{App, Plugin, Update, Startup};
-use bevy::ecs::system::{Commands, Res};
+use bevy::app::{App, Plugin, Startup};
+use bevy::ecs::system::Commands;
 use itertools::Itertools;
 use rustysynth::{SoundFont, Synthesizer, SynthesizerSettings};
 use spin_sleep::LoopHelper;
@@ -18,10 +18,11 @@ use std::thread;
 use std::time::Duration;
 use tinyaudio::{OutputDeviceParameters, run_output_device};
 
+use crate::music::generate::generate;
 use crate::music::midi_message::MidiMessage;
 use crate::music::player::play;
 use crate::music::state::State;
-use crate::music::style::Style;
+use crate::music::style::{Style, StyleResource};
 
 /// A plug-in that plays music during the game.
 pub struct MusicPlugin;
@@ -29,30 +30,18 @@ pub struct MusicPlugin;
 impl Plugin for MusicPlugin {
 	fn build(&self, app: &mut App) {
 		app.add_systems(Startup, initialise);
-		app.add_systems(Update, testplay);
 	}
-}
-
-fn testplay(state: Res<State>) {
-	_ = state.transmit.send(MidiMessage{
-		time: 64,
-		channel: 0,
-		command: 0x90,
-		data1: 60,
-		data2: 100
-	});
 }
 
 /// Initialise the music resources and start outputting to the sound device.
 fn initialise(mut commands: Commands) {
 	// Create a producer/consumer channel from the state resource to the synthesizer.
 	let (transmitter, mut receiver) = channel();
-	commands.insert_resource(State {
-		transmit: transmitter,
-		generated_up_to: 0
-	});
-	commands.insert_resource(Style {
+	let style = Arc::new(Mutex::new(Style {
 		playing: false
+	}));
+	commands.insert_resource(StyleResource {
+		style: style.clone()
 	});
 
 	//Create a synthesizer.
@@ -91,9 +80,15 @@ fn initialise(mut commands: Commands) {
 		let rate = 120.0 / 60.0 * 16.0; //120BPM, with 16-sub-beat intervals.
 		let mut time = 0u32; //Current timestamp.
 		let mut loop_helper = LoopHelper::builder().build_with_target_rate(rate);
+		let mut state = State {
+			transmit: transmitter,
+			generated_up_to: 0
+		};
+		let mut next_message: Option<MidiMessage> = None;
 		loop {
 			loop_helper.loop_start();
-			play(&mut receiver, time.clone(), synth.clone());
+			generate(&style.lock().unwrap(), &mut state, time);
+			play(&mut next_message, &mut receiver, time.clone(), synth.clone());
 			time += 1;
 			loop_helper.loop_sleep(); //Limit the loop rate.
 		}
