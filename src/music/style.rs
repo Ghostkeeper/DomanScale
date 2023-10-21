@@ -9,6 +9,7 @@
 use bevy::ecs::system::Resource;
 use std::sync::{Arc, Mutex};
 
+use crate::music::pitch::Pitch;
 use crate::music::scale::Scale;
 
 /// A resource that holds the style in a way that it can be used from Bevy's ECS as well as from the
@@ -26,6 +27,9 @@ pub struct StyleResource {
 pub struct Style {
 	/// Whether any music should be generated at all.
 	pub playing: bool,
+
+	/// The base note of the musical scale to play in.
+	pub base: Pitch,
 
 	/// Which scale is being played in.
 	pub scale: Scale

@@ -25,6 +25,7 @@ pub mod style;
 mod generate;
 mod midi_message;
 mod note;
+mod pitch;
 mod player;
 mod scale;
 mod state;
