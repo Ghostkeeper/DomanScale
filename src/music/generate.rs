@@ -18,10 +18,10 @@ use crate::music::style::Style;
 /// keep the music going for a while.
 ///
 /// # Arguments
-/// * `style`: The style of music to generate.
 /// * `state`: The music generation state, and transmitting channel.
+/// * `style`: The style of music to generate.
 /// * `current_time`: The current beat time in the generated music.
-pub fn generate(style: &Style, state: &mut State, current_time: u32) {
+pub fn generate(state: &mut State, style: &Style, current_time: u32) {
 	if current_time + 16 < state.generated_up_to { //Generated at least 16 ticks ahead.
 		return; //We generated far enough ahead.
 	}

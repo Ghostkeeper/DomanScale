@@ -91,7 +91,7 @@ fn initialise(mut commands: Commands) {
 		let mut next_message: Option<MidiMessage> = None;
 		loop {
 			loop_helper.loop_start();
-			generate(&style.lock().unwrap(), &mut state, time);
+			generate(&mut state, &style.lock().unwrap(), time);
 			play(&mut next_message, &mut receiver, time.clone(), synth.clone());
 			time += 1;
 			loop_helper.loop_sleep(); //Limit the loop rate.
