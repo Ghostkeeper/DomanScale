@@ -17,6 +17,7 @@ use bevy::ui::widget::Button;
 use bevy::ui::{AlignItems, Interaction, JustifyContent, Style, Val};
 
 use crate::menu::button;
+use crate::music::scale::Scale;
 use crate::music::style::StyleResource;
 
 /// System that renders and updates the menu.
@@ -26,7 +27,18 @@ pub fn menu_system(mut interaction_query: Query<(&Interaction, &Children), (Chan
 		match *interaction {
 			Interaction::Pressed => {
 				trace!("Pressed menu button: {}", text);
-				music_style.style.lock().unwrap().playing = true;
+				match text {
+					"Play" => music_style.style.lock().unwrap().playing = true,
+					"Change" => {
+						let mut style = music_style.style.lock().unwrap();
+						style.scale = match style.scale {
+							Scale::MAJOR => Scale::MINOR,
+							Scale::MINOR => Scale::HIJAZ,
+							Scale::HIJAZ => Scale::MAJOR
+						}
+					},
+					_ => ()
+				}
 			}
 			_ => {}
 		}
@@ -45,5 +57,8 @@ pub fn create_menu(mut commands: Commands) {
 			..Default::default()
 		},
 		..Default::default()
-	}).with_children(|parent| { button::construct_button(parent, "Play"); });
+	}).with_children(|parent| {
+		button::construct_button(parent, "Play");
+		button::construct_button(parent, "Change");
+	});
 }
