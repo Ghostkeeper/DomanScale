@@ -26,4 +26,5 @@ mod generate;
 mod midi_message;
 mod note;
 mod player;
+mod scale;
 mod state;
