@@ -41,8 +41,7 @@ fn initialise(mut commands: Commands) {
 	let (transmitter, mut receiver) = channel();
 	let style = Arc::new(Mutex::new(Style {
 		playing: false,
-		base: Pitch::C,
-		scale: Scale::Major
+		enchanting: false,
 	}));
 	commands.insert_resource(StyleResource {
 		style: style.clone()

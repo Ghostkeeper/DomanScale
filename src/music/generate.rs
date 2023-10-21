@@ -9,6 +9,7 @@
 use std::cmp::max;
 
 use crate::music::midi_message::MidiMessage;
+use crate::music::scale::Scale;
 use crate::music::state::State;
 use crate::music::style::Style;
 
@@ -46,12 +47,13 @@ fn measure(state: &mut State, style: &Style, time: u32) {
 	let start_time = ((time + 64 - 1) / 64) * 64;
 
 	let select_interval = [0usize, 2, 4, 6];
+	let scale = if style.enchanting { Scale::Hijaz } else { Scale::Major };
 	for beat in 0..4 {
 		let _ = state.transmit.send(MidiMessage {
 			time: start_time + (beat as u32) * 16,
 			channel: 0,
 			command: 0x90,
-			data1: 60 + style.scale.intervals()[select_interval[beat as usize]] as i32,
+			data1: 60 + scale.intervals()[select_interval[beat as usize]] as i32,
 			data2: 100
 		});
 	}

@@ -28,9 +28,8 @@ pub struct Style {
 	/// Whether any music should be generated at all.
 	pub playing: bool,
 
-	/// The base note of the musical scale to play in.
-	pub base: Pitch,
-
-	/// Which scale is being played in.
-	pub scale: Scale
+	/// Whether the generated music should have a magical overtone.
+	///
+	/// Most prominently, this changes the musical scale from Western to Arabic.
+	pub enchanting: bool
 }
