@@ -30,13 +30,29 @@ pub fn generate(style: &Style, state: &mut State, current_time: u32) {
 		return; //Don't want any music.
 	}
 
-	let next_beat_time = state.generated_up_to - (state.generated_up_to % 16) + 16;
-	let _ = state.transmit.send(MidiMessage {
-		time: next_beat_time,
-		channel: 0,
-		command: 0x90,
-		data1: 60,
-		data2: 100
-	});
-	state.generated_up_to = next_beat_time;
+	measure(state, style, state.generated_up_to);
+}
+
+/// Generate a measure (4 beats) of music.
+///
+/// # Arguments
+/// * `state`: The music generation state, and transmitting channel.
+/// * `style`: The style of music to generate.
+/// * `time`: The starting time of the measure to generate. If this time is not divisible by 1
+/// measure (64 ticks), it will be rounded up, meaning that there will be silence until this measure
+/// starts.
+fn measure(state: &mut State, style: &Style, time: u32) {
+	//Round time up to nearest multiple of 64 (1 measure).
+	let start_time = ((time + 64 - 1) / 64) * 64;
+
+	for beat in 0..4 {
+		let _ = state.transmit.send(MidiMessage {
+			time: start_time + beat * 16,
+			channel: 0,
+			command: 0x90,
+			data1: 60,
+			data2: 100
+		});
+	}
+	state.generated_up_to = start_time + 64;
 }

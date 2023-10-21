@@ -20,7 +20,9 @@ use tinyaudio::{OutputDeviceParameters, run_output_device};
 
 use crate::music::generate::generate;
 use crate::music::midi_message::MidiMessage;
+use crate::music::pitch::Pitch;
 use crate::music::player::play;
+use crate::music::scale::Scale;
 use crate::music::state::State;
 use crate::music::style::{Style, StyleResource};
 
@@ -38,7 +40,9 @@ fn initialise(mut commands: Commands) {
 	// Create a producer/consumer channel from the state resource to the synthesizer.
 	let (transmitter, mut receiver) = channel();
 	let style = Arc::new(Mutex::new(Style {
-		playing: false
+		playing: false,
+		base: Pitch::C,
+		scale: Scale::MAJOR
 	}));
 	commands.insert_resource(StyleResource {
 		style: style.clone()
