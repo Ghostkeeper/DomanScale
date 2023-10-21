@@ -12,17 +12,17 @@
 pub enum Scale {
 	/// The major scale, having note intervals of whole, whole, half, whole, whole, whole, half and
 	/// whole.
-	MAJOR,
+	Major,
 
 	/// The natural minor scale, having note intervals of whole, half, whole, whole, half, whole,
 	/// whole and half.
-	MINOR,
+	Minor,
 
 	/// The Hijaz (Arabic) scale, which has a special meaning in this game.
 	///
 	/// This scale has note intervals of half, augmented second, half, whole, half, whole, whole and
 	/// augmented second.
-	HIJAZ,
+	Hijaz,
 }
 
 impl Scale {
@@ -32,9 +32,9 @@ impl Scale {
 	/// scale contains 7 notes that are in-scale. These notes are listed in the result.
 	pub fn intervals(&self) -> [u32; 7] {
 		match self {
-			Scale::MAJOR => [0, 2, 4, 5, 7, 9, 11],
-			Scale::MINOR => [0, 2, 3, 5, 7, 8, 10],
-			Scale::HIJAZ => [0, 1, 4, 5, 7, 8, 10]
+			Scale::Major => [0, 2, 4, 5, 7, 9, 11],
+			Scale::Minor => [0, 2, 3, 5, 7, 8, 10],
+			Scale::Hijaz => [0, 1, 4, 5, 7, 8, 10]
 		}
 	}
 }

@@ -42,7 +42,7 @@ fn initialise(mut commands: Commands) {
 	let style = Arc::new(Mutex::new(Style {
 		playing: false,
 		base: Pitch::C,
-		scale: Scale::MAJOR
+		scale: Scale::Major
 	}));
 	commands.insert_resource(StyleResource {
 		style: style.clone()

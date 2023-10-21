@@ -32,9 +32,9 @@ pub fn menu_system(mut interaction_query: Query<(&Interaction, &Children), (Chan
 					"Change" => {
 						let mut style = music_style.style.lock().unwrap();
 						style.scale = match style.scale {
-							Scale::MAJOR => Scale::MINOR,
-							Scale::MINOR => Scale::HIJAZ,
-							Scale::HIJAZ => Scale::MAJOR
+							Scale::Major => Scale::Minor,
+							Scale::Minor => Scale::Hijaz,
+							Scale::Hijaz => Scale::Major
 						}
 					},
 					_ => ()
