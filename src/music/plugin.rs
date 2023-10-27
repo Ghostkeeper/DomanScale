@@ -19,10 +19,9 @@ use std::time::Duration;
 use tinyaudio::{OutputDeviceParameters, run_output_device};
 
 use crate::music::generate::generate;
+use crate::music::instrument::Instrument;
 use crate::music::midi_message::MidiMessage;
-use crate::music::pitch::Pitch;
 use crate::music::player::play;
-use crate::music::scale::Scale;
 use crate::music::state::State;
 use crate::music::style::{Style, StyleResource};
 
@@ -85,7 +84,9 @@ fn initialise(mut commands: Commands) {
 		let mut loop_helper = LoopHelper::builder().build_with_target_rate(rate);
 		let mut state = State {
 			transmit: transmitter,
-			generated_up_to: 0
+			generated_up_to: 0,
+			current_instruments: [Instrument::GrandPiano; 16],
+			most_recent_activity: [0; 16]
 		};
 		let mut next_message: Option<MidiMessage> = None;
 		loop {
