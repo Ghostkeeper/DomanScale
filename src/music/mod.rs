@@ -23,7 +23,9 @@ pub mod plugin;
 pub mod style;
 
 mod generate;
+mod instrument;
 mod midi_message;
+mod musician;
 mod pitch;
 mod player;
 mod scale;

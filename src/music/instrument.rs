@@ -9,6 +9,7 @@
 /// The musical instruments that are available.
 ///
 /// This simply lists all of the MIDI instruments.
+#[derive(Clone, Copy, PartialEq)]
 pub enum Instrument {
 	//Piano.
 	GrandPiano = 0,
