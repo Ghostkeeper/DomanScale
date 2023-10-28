@@ -35,7 +35,13 @@ pub struct State {
 	///
 	/// Activity includes playing a note, playing a sustained note (infinite activity) or changing
 	/// the instrument of the channel.
-	pub most_recent_activity: [u32; 16]
+	pub most_recent_activity: [u32; 16],
+
+	/// If there is any drone going on, this stores the drone instrument.
+	///
+	/// Only one drone can be playing at the same time. The drone is a continuous note playing
+	/// without definite end (although they can change pitch over time).
+	pub drone: Option<Instrument>
 }
 
 impl State {

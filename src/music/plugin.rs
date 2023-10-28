@@ -88,7 +88,8 @@ fn initialise(mut commands: Commands) {
 			transmit: transmitter,
 			generated_up_to: 0,
 			current_instruments: [Instrument::GrandPiano; 16],
-			most_recent_activity: [0; 16]
+			most_recent_activity: [0; 16],
+			drone: None
 		};
 		let mut next_message: Option<MidiMessage> = None;
 		loop {
