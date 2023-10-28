@@ -6,6 +6,8 @@
  * You should have received a copy of the GNU Affero General Public License along with this application. If not, see <https://gnu.org/licenses/>.
  */
 
+use crate::music::instrument::Instrument;
+
 /// A message that can be queued for sending to the synthesizer.
 ///
 /// This message contains a few bytes of data which will be the message being sent. However the
@@ -67,4 +69,83 @@ pub struct MidiMessage {
 	/// * Controller: Depending on the first data field, this data field controls the magnitude of
 	/// that effect.
 	pub data2: i32,
+}
+
+impl MidiMessage {
+	/// Helper function to generate a "note on" MIDI message.
+	///
+	/// # Arguments
+	/// * `time`: The timestamp at which the note must go on.
+	/// * `channel`: The channel that the note must be played on. To get a proper channel for an
+	/// instrument, use the `State::get_channel` function.
+	/// * `pitch`: The pitch of the note.
+	/// * `velocity`: The velocity (roughly, volume) of the note.
+	///
+	/// # Returns
+	/// Returns a MIDI message that can be sent to the synthesizer.
+	pub fn note_on(time: u32, channel: i32, pitch: i32, velocity: i32) -> MidiMessage {
+		MidiMessage {
+			time: time,
+			channel: channel,
+			command: 0x90, //Note on.
+			data1: pitch,
+			data2: velocity
+		}
+	}
+
+	/// Helper function to generate a "note off" MIDI message.
+	///
+	/// # Arguments
+	/// * `time`: The timestamp at which the note must go off.
+	/// * `channel`: The channel of the note to turn off.
+	/// * `pitch`: The pitch of the note to turn off.
+	///
+	/// # Returns
+	/// Returns a MIDI message that can be sent to the synthesizer.
+	pub fn note_off(time: u32, channel: i32, pitch: i32) -> MidiMessage {
+		MidiMessage {
+			time: time,
+			channel: channel,
+			command: 0x80, //Note off.
+			data1: pitch,
+			data2: 0
+		}
+	}
+
+	/// Helper function to generate a program change MIDI message.
+	///
+	/// # Arguments
+	/// * `time`: The timestamp at which the program should change.
+	/// * `channel`: The channel to change the program of.
+	/// * `instrument`: The instrument to play on that channel.
+	///
+	/// # Returns
+	/// Returns a MIDI message that can be sent to the synthesizer.
+	pub fn change_program(time: u32, channel: i32, instrument: Instrument) -> MidiMessage {
+		MidiMessage {
+			time: time,
+			channel: channel,
+			command: 0xC0, //Program change.
+			data1: instrument as i32,
+			data2: 0
+		}
+	}
+
+	/// Helper function to generate a "stop all notes" message.
+	///
+	/// # Arguments
+	/// * `time`: The timestamp at which to stop all notes.
+	/// * `channel`: The channel to stop all notes on.
+	///
+	/// # Returns
+	/// Returns a MIDI message that can be sent to the synthesizer.
+	pub fn stop_all_notes(time: u32, channel: i32) -> MidiMessage {
+		MidiMessage {
+			time: time,
+			channel: channel,
+			command: 0xB0, //Controller.
+			data1: 0x7B, //Stop all notes.
+			data2: 0
+		}
+	}
 }

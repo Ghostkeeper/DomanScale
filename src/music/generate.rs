@@ -50,13 +50,7 @@ fn measure(state: &mut State, style: &Style, time: u32) {
 
 	let drone = Mood::drone(style.mood);
 	if drone != state.drone {
-		_ = state.transmit.send(MidiMessage {
-			time: start_time,
-			channel: 10, //The drone channel.
-			command: 0xB0,
-			data1: 0x7B,
-			data2: 0
-		});
+		_ = state.transmit.send(MidiMessage::stop_all_notes(start_time, 10));
 		cello_drone(state, start_time, 48, 100);
 		state.drone = drone;
 	}

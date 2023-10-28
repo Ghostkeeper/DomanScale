@@ -85,13 +85,7 @@ impl State {
 			}
 		}
 		//Change the program of that channel to have the correct instrument.
-		_ = self.transmit.send(MidiMessage {
-			time: time,
-			channel: oldest_channel as i32,
-			command: 0xC0 + oldest_channel as i32,
-			data1: instrument as i32,
-			data2: 0
-		});
+		_ = self.transmit.send(MidiMessage::change_program(time, oldest_channel as i32, instrument));
 		self.current_instruments[oldest_channel] = instrument;
 		self.most_recent_activity[oldest_channel] = time;
 		return 0;

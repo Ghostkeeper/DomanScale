@@ -21,6 +21,9 @@ impl Mood {
 	///
 	/// The drone will automatically start playing when the mood is set.
 	///
+	/// # Arguments
+	/// * `mood`: The mood to get the drone instrument for.
+	///
 	/// # Returns
 	/// An instrument, if any, to be used as drone.
 	pub fn drone(mood: Mood) -> Option<Instrument> {

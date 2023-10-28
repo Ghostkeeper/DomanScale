@@ -21,29 +21,11 @@ use crate::music::midi_message::MidiMessage;
 /// There is not even an end note event.
 pub fn guitar(state: &mut State, time: u32, pitch: i32, velocity: i32) {
 	let channel = state.get_channel(Instrument::NylonGuitar, time);
-	_ = state.transmit.send(MidiMessage {
-		time: time,
-		channel: channel,
-		command: 0x90,
-		data1: pitch,
-		data2: velocity
-	});
+	_ = state.transmit.send(MidiMessage::note_on(time, channel, pitch, velocity));
 }
 
 pub fn cello_drone(state: &mut State, time: u32, pitch: i32, velocity: i32) {
 	//Change the program of that channel to have the correct instrument.
-	_ = state.transmit.send(MidiMessage {
-		time: time,
-		channel: 10,
-		command: 0xC0,
-		data1: Instrument::Cello as i32,
-		data2: 0
-	});
-	_ = state.transmit.send(MidiMessage {
-		time: time,
-		channel: 10,
-		command: 0x90,
-		data1: pitch,
-		data2: velocity
-	});
+	_ = state.transmit.send(MidiMessage::change_program(time, 10, Instrument::Cello));
+	_ = state.transmit.send(MidiMessage::note_on(time, 10, pitch, velocity));
 }
