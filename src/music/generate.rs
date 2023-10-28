@@ -48,7 +48,7 @@ fn measure(state: &mut State, style: &Style, time: u32) {
 	//Round time up to nearest multiple of 64 (1 measure).
 	let start_time = ((time + 64 - 1) / 64) * 64;
 
-	let drone = Mood::which_drone(style.mood);
+	let drone = Mood::drone(style.mood);
 	if drone != state.drone {
 		_ = state.transmit.send(MidiMessage {
 			time: start_time,

@@ -23,8 +23,8 @@ impl Mood {
 	///
 	/// # Returns
 	/// An instrument, if any, to be used as drone.
-	pub fn which_drone(self) -> Option<Instrument> {
-		match self {
+	pub fn drone(mood: Mood) -> Option<Instrument> {
+		match mood {
 			Mood::Adventurous => Some(Instrument::Cello)
 		}
 	}
