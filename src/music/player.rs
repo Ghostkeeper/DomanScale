@@ -31,13 +31,12 @@ pub fn play(next_message: &mut Option<MidiMessage>, receiver: &mut Receiver<Midi
 				if message.time > time {
 					return; //Next note is in the future. Need to wait a while, until we're called with that time.
 				}
-				else if message.time < time { //Already passed? Shouldn't happen.
-					warn!("Accidentally skipped a MIDI message.");
-					*next_message = None;
-				}
 				else {
+					if message.time < time {
+						warn!("Accidentally skipped a MIDI message. Are messages out of order?");
+					}
 					synth.lock().unwrap().process_midi_message(message.channel, message.command, message.data1, message.data2);
-					*next_message = None; //Done with this message.
+					*next_message = None;
 				}
 			}
 		}
