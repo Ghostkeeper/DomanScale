@@ -64,6 +64,9 @@ impl State {
 	/// A channel that the given instrument can be played on.
 	pub fn get_channel(&mut self, instrument: Instrument, time: u32) -> i32 {
 		for (channel, current_instrument) in self.current_instruments.iter().enumerate() {
+			if channel == 9 || channel == 10 { //Don't use the percussion or drone channels.
+				continue;
+			}
 			if *current_instrument == instrument { //The instrument is already allocated. Simply give that one.
 				return channel as i32;
 			}
@@ -73,6 +76,9 @@ impl State {
 		let mut oldest_activity: u32 = 0;
 		let mut oldest_channel = 0;
 		for (channel, activity_timestamp) in self.most_recent_activity.iter().enumerate() {
+			if channel == 9 || channel == 10 { //Don't use the percussion or drone channels.
+				continue;
+			}
 			if *activity_timestamp < oldest_activity {
 				oldest_activity = *activity_timestamp;
 				oldest_channel = channel;
