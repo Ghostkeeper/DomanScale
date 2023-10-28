@@ -24,8 +24,8 @@ pub fn guitar(state: &mut State, time: u32, pitch: i32, velocity: i32) {
 	_ = state.transmit.send(MidiMessage::note_on(time, channel, pitch, velocity));
 }
 
-pub fn cello_drone(state: &mut State, time: u32, pitch: i32, velocity: i32) {
+pub fn cello_drone(state: &mut State, time: u32, pitch: i32) {
 	//Change the program of that channel to have the correct instrument.
 	_ = state.transmit.send(MidiMessage::change_program(time, 10, Instrument::Cello));
-	_ = state.transmit.send(MidiMessage::note_on(time, 10, pitch, velocity));
+	_ = state.transmit.send(MidiMessage::note_on(time, 10, pitch, 64));
 }

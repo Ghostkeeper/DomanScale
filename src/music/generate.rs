@@ -51,7 +51,7 @@ fn measure(state: &mut State, style: &Style, time: u32) {
 	let drone = Mood::drone(style.mood);
 	if drone != state.drone {
 		_ = state.transmit.send(MidiMessage::stop_all_notes(start_time, 10));
-		cello_drone(state, start_time, 48, 100);
+		cello_drone(state, start_time, 48);
 		state.drone = drone;
 	}
 
@@ -59,7 +59,7 @@ fn measure(state: &mut State, style: &Style, time: u32) {
 	let select_octave = [0, 0, 0, 0, 1, 0, 0, 0];
 	let scale = if style.enchanting { Scale::Hijaz } else { Scale::Major };
 	for beat in 0..8 {
-		guitar(state, start_time + (beat as u32) * 8, 60 + scale.intervals()[select_interval[beat as usize]] as i32 + select_octave[beat as usize] as i32 * 12, 100);
+		guitar(state, start_time + (beat as u32) * 8, 60 + scale.intervals()[select_interval[beat as usize]] as i32 + select_octave[beat as usize] as i32 * 12, 127);
 	}
 
 	state.generated_up_to = start_time + 64;
