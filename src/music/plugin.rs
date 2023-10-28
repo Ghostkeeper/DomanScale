@@ -21,6 +21,7 @@ use tinyaudio::{OutputDeviceParameters, run_output_device};
 use crate::music::generate::generate;
 use crate::music::instrument::Instrument;
 use crate::music::midi_message::MidiMessage;
+use crate::music::mood::Mood;
 use crate::music::player::play;
 use crate::music::state::State;
 use crate::music::style::{Style, StyleResource};
@@ -41,6 +42,7 @@ fn initialise(mut commands: Commands) {
 	let style = Arc::new(Mutex::new(Style {
 		playing: false,
 		enchanting: false,
+		mood: Mood::Adventurous
 	}));
 	commands.insert_resource(StyleResource {
 		style: style.clone()

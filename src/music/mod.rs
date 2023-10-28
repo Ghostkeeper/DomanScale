@@ -19,6 +19,7 @@
 //! with a nice transition towards it to keep the music going. Other controls, like volume, do get
 //! applied immediately.
 
+pub mod mood;
 pub mod plugin;
 pub mod style;
 

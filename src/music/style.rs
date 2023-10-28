@@ -9,9 +9,6 @@
 use bevy::ecs::system::Resource;
 use std::sync::{Arc, Mutex};
 
-use crate::music::pitch::Pitch;
-use crate::music::scale::Scale;
-
 /// A resource that holds the style in a way that it can be used from Bevy's ECS as well as from the
 /// music generation thread.
 #[derive(Resource)]
@@ -31,5 +28,8 @@ pub struct Style {
 	/// Whether the generated music should have a magical overtone.
 	///
 	/// Most prominently, this changes the musical scale from Western to Arabic.
-	pub enchanting: bool
+	pub enchanting: bool,
+
+	/// The mood of the music largely determines the theme and instrumentation.
+	pub mood: Mood,
 }
