@@ -55,7 +55,7 @@ fn initialise(mut commands: Commands) {
 	let params = OutputDeviceParameters {
 		channels_count: 2,
 		sample_rate: 44100,
-		channel_sample_count: 4410 //Buffer size.
+		channel_sample_count: 140 //Buffer size.
 	};
 
 	//Create a thread that infinitely keeps rendering (as long as the parent process runs).
@@ -92,7 +92,7 @@ fn initialise(mut commands: Commands) {
 		loop {
 			loop_helper.loop_start();
 			generate(&mut state, &style.lock().unwrap(), time);
-			play(&mut next_message, &mut receiver, time.clone(), synth.clone());
+			play(&mut next_message, &mut receiver, time, synth.clone());
 			time += 1;
 			loop_helper.loop_sleep(); //Limit the loop rate.
 		}

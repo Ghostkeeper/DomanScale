@@ -21,7 +21,6 @@ use crate::music::midi_message::MidiMessage;
 /// There is not even an end note event.
 pub fn guitar(state: &mut State, time: u32, pitch: i32, velocity: i32) {
 	let channel = state.get_channel(Instrument::NylonGuitar, time);
-	println!("Playing guitar! Time {}, pitch {}, channel {}", time, pitch, channel);
 	_ = state.transmit.send(MidiMessage {
 		time: time,
 		channel: channel,

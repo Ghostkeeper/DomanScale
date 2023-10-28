@@ -82,7 +82,6 @@ impl State {
 		});
 		self.current_instruments[oldest_channel] = instrument;
 		self.most_recent_activity[oldest_channel] = time;
-		println!("Changing program of channel {} to guitar.", oldest_channel);
 		return 0;
 	}
 }
