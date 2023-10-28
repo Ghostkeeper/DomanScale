@@ -89,7 +89,8 @@ fn initialise(mut commands: Commands) {
 			generated_up_to: 0,
 			current_instruments: [Instrument::GrandPiano; 16],
 			most_recent_activity: [0; 16],
-			drone: None
+			drone: None,
+			measure_in_phrase: 0
 		};
 		let mut next_message: Option<MidiMessage> = None;
 		loop {

@@ -31,3 +31,4 @@ mod pitch;
 mod player;
 mod scale;
 mod state;
+mod theme;

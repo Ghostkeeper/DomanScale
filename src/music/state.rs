@@ -41,7 +41,13 @@ pub struct State {
 	///
 	/// Only one drone can be playing at the same time. The drone is a continuous note playing
 	/// without definite end (although they can change pitch over time).
-	pub drone: Option<Instrument>
+	pub drone: Option<Instrument>,
+
+	/// Which measure of a phrase it is.
+	///
+	/// Most phrases will have either 4 or 8 measures. This counts how many measures have passed
+	/// since the start of the phrase.
+	pub measure_in_phrase: usize,
 }
 
 impl State {

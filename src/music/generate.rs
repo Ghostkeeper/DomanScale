@@ -9,7 +9,6 @@
 use std::cmp::max;
 
 use crate::music::midi_message::MidiMessage;
-use crate::music::mood::Mood;
 use crate::music::musician::{cello_drone, guitar};
 use crate::music::scale::Scale;
 use crate::music::state::State;
@@ -48,19 +47,21 @@ fn measure(state: &mut State, style: &Style, time: u32) {
 	//Round time up to nearest multiple of 64 (1 measure).
 	let start_time = ((time + 64 - 1) / 64) * 64;
 
-	let drone = Mood::drone(style.mood);
+	let drone = style.mood.drone();
 	if drone != state.drone {
 		_ = state.transmit.send(MidiMessage::stop_all_notes(start_time, 10));
 		cello_drone(state, start_time, 48);
 		state.drone = drone;
 	}
 
-	let select_interval = [0usize, 2, 4, 6, 0, 6, 4, 2];
-	let select_octave = [0, 0, 0, 0, 1, 0, 0, 0];
+	let theme = style.mood.themes()[0];
+	let melody = theme.melody();
+	let this_measure = &melody[state.measure_in_phrase % 2];
 	let scale = if style.enchanting { Scale::Hijaz } else { Scale::Major };
-	for beat in 0..8 {
-		guitar(state, start_time + (beat as u32) * 8, 60 + scale.intervals()[select_interval[beat as usize]] as i32 + select_octave[beat as usize] as i32 * 12, 127);
+	for (time, pitch) in this_measure {
+		guitar(state, start_time + time, 60 + scale.intervals()[pitch.rem_euclid(7) as usize] as i32 + pitch / 7 * 12, 127)
 	}
 
+	state.measure_in_phrase = (state.measure_in_phrase + 1) % 4; //TODO: Hard-coded 4 measures per phrase.
 	state.generated_up_to = start_time + 64;
 }

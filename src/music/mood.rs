@@ -7,6 +7,7 @@
  */
 
 use crate::music::instrument::Instrument;
+use crate::music::theme::Theme;
 
 /// The mood of the music largely determines the theme and instrumentation being played.
 #[derive(Clone, Copy)]
@@ -21,14 +22,21 @@ impl Mood {
 	///
 	/// The drone will automatically start playing when the mood is set.
 	///
-	/// # Arguments
-	/// * `mood`: The mood to get the drone instrument for.
-	///
 	/// # Returns
 	/// An instrument, if any, to be used as drone.
-	pub fn drone(mood: Mood) -> Option<Instrument> {
-		match mood {
+	pub fn drone(&self) -> Option<Instrument> {
+		match self {
 			Mood::Adventurous => Some(Instrument::Cello)
+		}
+	}
+
+	/// Get the themes that are applicable to a mood.
+	///
+	/// # Returns
+	/// A list of themes applicable. There will be at least one theme for each mood.
+	pub fn themes(&self) -> Vec<Theme> {
+		match self {
+			Mood::Adventurous => vec![Theme::Doman]
 		}
 	}
 }
