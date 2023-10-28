@@ -9,6 +9,8 @@
 use bevy::ecs::system::Resource;
 use std::sync::{Arc, Mutex};
 
+use crate::music::mood::Mood;
+
 /// A resource that holds the style in a way that it can be used from Bevy's ECS as well as from the
 /// music generation thread.
 #[derive(Resource)]

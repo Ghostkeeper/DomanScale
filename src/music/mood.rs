@@ -6,9 +6,26 @@
  * You should have received a copy of the GNU Affero General Public License along with this application. If not, see <https://gnu.org/licenses/>.
  */
 
+use crate::music::instrument::Instrument;
+
 /// The mood of the music largely determines the theme and instrumentation being played.
+#[derive(Clone, Copy)]
 pub enum Mood {
 	/// Adventurous music is grandiose and upbeat, with lots of orchestral instruments forming a
 	/// full sound.
 	Adventurous,
+}
+
+impl Mood {
+	/// Get which drone is associated with each mood.
+	///
+	/// The drone will automatically start playing when the mood is set.
+	///
+	/// # Returns
+	/// An instrument, if any, to be used as drone.
+	pub fn which_drone(self) -> Option<Instrument> {
+		match self {
+			Mood::Adventurous => Some(Instrument::Cello)
+		}
+	}
 }

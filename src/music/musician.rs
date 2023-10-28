@@ -29,3 +29,21 @@ pub fn guitar(state: &mut State, time: u32, pitch: i32, velocity: i32) {
 		data2: velocity
 	});
 }
+
+pub fn cello_drone(state: &mut State, time: u32, pitch: i32, velocity: i32) {
+	//Change the program of that channel to have the correct instrument.
+	_ = state.transmit.send(MidiMessage {
+		time: time,
+		channel: 10,
+		command: 0xC0,
+		data1: Instrument::Cello as i32,
+		data2: 0
+	});
+	_ = state.transmit.send(MidiMessage {
+		time: time,
+		channel: 10,
+		command: 0x90,
+		data1: pitch,
+		data2: velocity
+	});
+}

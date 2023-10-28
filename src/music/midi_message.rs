@@ -25,6 +25,13 @@ pub struct MidiMessage {
 	pub channel: i32,
 
 	/// The MIDI command to send.
+	///
+	/// These are the possible commands:
+	/// * 0x80: Note off.
+	/// * 0x90: Note on.
+	/// * 0xB0: Controller.
+	/// * 0xC0: Program change.
+	/// * 0xE0: Pitch bend.
 	pub command: i32,
 
 	/// One of the data fields to send with the MIDI command. What this data field means depends on

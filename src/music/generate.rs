@@ -9,7 +9,8 @@
 use std::cmp::max;
 
 use crate::music::midi_message::MidiMessage;
-use crate::music::musician::guitar;
+use crate::music::mood::Mood;
+use crate::music::musician::{cello_drone, guitar};
 use crate::music::scale::Scale;
 use crate::music::state::State;
 use crate::music::style::Style;
@@ -47,10 +48,25 @@ fn measure(state: &mut State, style: &Style, time: u32) {
 	//Round time up to nearest multiple of 64 (1 measure).
 	let start_time = ((time + 64 - 1) / 64) * 64;
 
-	let select_interval = [0usize, 2, 4, 6];
-	let scale = if style.enchanting { Scale::Hijaz } else { Scale::Major };
-	for beat in 0..4 {
-		guitar(state, start_time + (beat as u32) * 16, 60 + scale.intervals()[select_interval[beat as usize]] as i32, 100);
+	let drone = Mood::which_drone(style.mood);
+	if drone != state.drone {
+		_ = state.transmit.send(MidiMessage {
+			time: start_time,
+			channel: 10, //The drone channel.
+			command: 0xB0,
+			data1: 0x7B,
+			data2: 0
+		});
+		cello_drone(state, start_time, 48, 100);
+		state.drone = drone;
 	}
+
+	let select_interval = [0usize, 2, 4, 6, 0, 6, 4, 2];
+	let select_octave = [0, 0, 0, 0, 1, 0, 0, 0];
+	let scale = if style.enchanting { Scale::Hijaz } else { Scale::Major };
+	for beat in 0..8 {
+		guitar(state, start_time + (beat as u32) * 8, 60 + scale.intervals()[select_interval[beat as usize]] as i32 + select_octave[beat as usize] as i32 * 12, 100);
+	}
+
 	state.generated_up_to = start_time + 64;
 }
