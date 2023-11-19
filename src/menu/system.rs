@@ -47,6 +47,7 @@ pub fn create_menu(mut commands: Commands) {
 	commands.spawn(NodeBundle {
 		style: Style {
 			width: Val::Percent(100.0),
+			height: Val::Percent(100.0),
 			align_items: AlignItems::Center,
 			justify_content: JustifyContent::Center,
 			..Default::default()
