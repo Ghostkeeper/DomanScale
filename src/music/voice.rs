@@ -17,30 +17,30 @@
 /// this enum.
 pub enum Voice {
 	/// A continuous background voice that fills the empty space between notes, usually in the lows.
-	Drone,
+	Drone = 10,
 
 	/// A low voice that fills the lower end of the spectrum and indicates the bass note of the
 	/// chord.
-	Bass,
+	Bass = 0,
 
 	/// The most salient voice, transferring the melody and character of the music to the listener.
-	Lead,
+	Lead = 1,
 
 	/// Counters or accompanies the lead voice.
-	Secondary,
+	Secondary = 2,
 
 	/// Counters or accompanies the lead and secondary voices.
-	Tertiary,
+	Tertiary = 3,
 
 	/// Follows the lead voice, at least partially, but usually at an offset chord or using a
 	/// different instrument.
-	Harmony,
+	Harmony = 4,
 
 	/// Rhythmic section but with a bit of tonality to it, similar to bass but for filling the
 	/// highs.
-	Rhythm,
+	Rhythm = 5,
 
 	/// Rhythmic section without tonality to it, a strong indicator of the speed of the music, and
 	/// filling the very highs and lows of the spectrum.
-	Percussion,
+	Percussion = 11,
 }
