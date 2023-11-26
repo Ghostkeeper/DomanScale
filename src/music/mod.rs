@@ -30,5 +30,6 @@ mod musician;
 mod pitch;
 mod player;
 mod scale;
+mod voice;
 mod state;
 mod theme;
