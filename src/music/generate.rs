@@ -9,7 +9,7 @@
 use std::cmp::max;
 
 use crate::music::midi_message::MidiMessage;
-use crate::music::musician::{cello_drone, guitar};
+use crate::music::musician::{cello_drone, guitar_lead};
 use crate::music::scale::Scale;
 use crate::music::state::State;
 use crate::music::style::Style;
@@ -59,7 +59,7 @@ fn measure(state: &mut State, style: &Style, time: u32) {
 	let this_measure = &melody[state.measure_in_phrase % 2];
 	let scale = if style.enchanting { Scale::Hijaz } else { Scale::Major };
 	for (time, pitch) in this_measure {
-		guitar(state, start_time + time, 60 + scale.intervals()[pitch.rem_euclid(7) as usize] as i32 + (pitch - 6) / 7 * 12, 127)
+		guitar_lead(state, start_time + time, 60 + scale.intervals()[pitch.rem_euclid(7) as usize] as i32 + (pitch - 6) / 7 * 12, 127)
 	}
 
 	state.measure_in_phrase = (state.measure_in_phrase + 1) % 4; //TODO: Hard-coded 4 measures per phrase.
