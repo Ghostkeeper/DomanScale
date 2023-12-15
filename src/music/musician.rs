@@ -26,8 +26,8 @@ use crate::music::voice::Voice;
 /// * `time` - The timestamp of the note to play.
 /// * `pitch` - The pitch of the note to play.
 /// * `velocity` - The velocity of the note to play.
-pub fn guitar_lead(state: &mut State, time: u32, pitch: i32, velocity: i32) {
-	let channel = Voice::Lead as i32;
+pub fn guitar_lead(state: &mut State, time: u32, pitch: u8, velocity: u8) {
+	let channel = Voice::Lead as u8;
 	state.set_instrument(channel, Instrument::NylonGuitar, time);
 	_ = state.transmit.send(MidiMessage::note_on(time, channel, pitch, velocity));
 }
@@ -41,9 +41,9 @@ pub fn guitar_lead(state: &mut State, time: u32, pitch: i32, velocity: i32) {
 /// * `state` - The music generation state to track instruments and play MIDI through.
 /// * `time` - The timestamp of when this drone note should start.
 /// * `pitch` - The pitch of the note to play.
-pub fn cello_drone(state: &mut State, time: u32, pitch: i32) {
+pub fn cello_drone(state: &mut State, time: u32, pitch: u8) {
 	//Change the program of that channel to have the correct instrument.
-	let channel = Voice::Drone as i32;
+	let channel = Voice::Drone as u8;
 	state.set_instrument(channel, Instrument::Cello, time);
 	_ = state.transmit.send(MidiMessage::note_on(time, channel, pitch, 64));
 }

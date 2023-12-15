@@ -48,7 +48,7 @@ impl State {
 	/// Change the instrument of a specific channel to a different one.
 	///
 	/// This changes the stored state, and also emits a MIDI message to let the synthesizer change the channel too.
-	pub fn set_instrument(&mut self, channel: i32, instrument: Instrument, time: u32) {
+	pub fn set_instrument(&mut self, channel: u8, instrument: Instrument, time: u32) {
 		if self.current_instruments[channel as usize] != instrument {
 			self.current_instruments[channel as usize] = instrument;
 			let _ = self.transmit.send(MidiMessage::change_program(time, channel, instrument));

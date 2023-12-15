@@ -59,7 +59,7 @@ fn measure(state: &mut State, style: &Style, time: u32) {
 	let this_measure = &melody[state.measure_in_phrase % 2];
 	let scale = if style.enchanting { Scale::Hijaz } else { Scale::Major };
 	for (time, pitch) in this_measure {
-		guitar_lead(state, start_time + time, 60 + scale.intervals()[pitch.rem_euclid(7) as usize] as i32 + (pitch - 6) / 7 * 12, 127)
+		guitar_lead(state, start_time + time, (60 + scale.intervals()[pitch.rem_euclid(7) as usize] as i8 + (pitch - 6) / 7 * 12) as u8, 127);
 	}
 
 	state.measure_in_phrase = (state.measure_in_phrase + 1) % 4; //TODO: Hard-coded 4 measures per phrase.

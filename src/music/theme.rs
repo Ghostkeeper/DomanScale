@@ -22,7 +22,7 @@ impl Theme {
 	/// The melody is a vector of measures, and each measure contains a vector of notes. Each note
 	/// is a pair combining (timestamp, pitch). The pitch here is relative to the base note, and
 	/// depends on the scale.
-	pub fn melody(&self) -> Vec<Vec<(u32, i32)>> {
+	pub fn melody(&self) -> Vec<Vec<(u32, i8)>> {
 		match self {
 			Theme::Doman => vec![vec![(0, 0), (24, -2), (32, -3)], vec![(0, 0), (24, 2), (32, -3), (48, -1)]]
 		}
