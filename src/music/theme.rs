@@ -24,7 +24,7 @@ impl Theme {
 	/// depends on the scale.
 	pub fn melody(&self) -> Vec<Vec<(u32, i8)>> {
 		match self {
-			Theme::Doman => vec![vec![(0, 0), (24, -2), (32, -3)], vec![(0, 0), (24, 2), (32, -3), (48, -1)]]
+			Theme::Doman => vec![vec![(0, 0), (32, 4)], vec![(0, 3), (16, 2), (24, 1)]]
 		}
 	}
 }
