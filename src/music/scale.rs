@@ -9,6 +9,7 @@
 /// The musical scales to play music in.
 ///
 /// The musical scale determines which 7 out of 12 notes are included in the scale.
+#[derive(Clone, Copy)]
 pub enum Scale {
 	/// The major scale, having note intervals of whole, whole, half, whole, whole, whole, half and
 	/// whole.
