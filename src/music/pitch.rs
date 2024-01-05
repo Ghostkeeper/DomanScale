@@ -10,40 +10,41 @@
 ///
 /// This is not an absolute pitch (in Hz) but rather the 12 pitches of the chromatic scale,
 /// repeating at the octave.
+#[derive(Clone, Copy)]
 pub enum Pitch {
 	/// Pitch of C.
-	C,
+	C = 0,
 
 	/// Pitch of C#.
-	CS,
+	CS = 1,
 
 	/// Pitch of D.
-	D,
+	D = 2,
 
 	/// Pitch of D#.
-	DS,
+	DS = 3,
 
 	/// Pitch of E.
-	E,
+	E = 4,
 
 	/// Pitch of F.
-	F,
+	F = 5,
 
 	/// Pitch of F#.
-	FS,
+	FS = 6,
 
 	/// Pitch of G.
-	G,
+	G = 7,
 
 	/// Pitch of G#.
-	GS,
+	GS = 8,
 
 	/// Pitch of A.
-	A,
+	A = 9,
 
 	/// Pitch of A#.
-	AS,
+	AS = 10,
 
 	/// Pitch of B.
-	B
+	B = 11
 }

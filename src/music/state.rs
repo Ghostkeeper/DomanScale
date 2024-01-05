@@ -31,12 +31,6 @@ pub struct State {
 	/// set for specific instruments.
 	pub current_instruments: [Instrument; 16],
 
-	/// The timestamp of the most recent activity on each channel.
-	///
-	/// Activity includes playing a note, playing a sustained note (infinite activity) or changing
-	/// the instrument of the channel.
-	pub most_recent_activity: [u32; 16],
-
 	/// If there is any drone going on, this stores the drone instrument.
 	///
 	/// Only one drone can be playing at the same time. The drone is a continuous note playing
@@ -51,49 +45,13 @@ pub struct State {
 }
 
 impl State {
-	/// Get a channel to play a certain instrument in.
+	/// Change the instrument of a specific channel to a different one.
 	///
-	/// If there is already a channel set to the given instrument, that channel is simply returned.
-	/// Buf if not, the channel that has seen the least use recently will get allocated for that
-	/// instrument.
-	///
-	/// There is inherently a bit of a mismatch in time here between when the notes get planned and
-	/// when they get played out. The channel gets reserved when it is planned, but it will remain
-	/// unused until the note actually plays, causing a less-than-ideal use of the limited number of
-	/// channels. Hopefully we'll not actually run into this issue in practice.
-	///
-	/// # Arguments:
-	/// * instrument: The instrument to reserve a channel for.
-	/// * time: The timestamp that the instrument must be changed by.
-	///
-	/// # Returns:
-	/// A channel that the given instrument can be played on.
-	pub fn get_channel(&mut self, instrument: Instrument, time: u32) -> i32 {
-		for (channel, current_instrument) in self.current_instruments.iter().enumerate() {
-			if channel == 9 || channel == 10 { //Don't use the percussion or drone channels.
-				continue;
-			}
-			if *current_instrument == instrument { //The instrument is already allocated. Simply give that one.
-				return channel as i32;
-			}
+	/// This changes the stored state, and also emits a MIDI message to let the synthesizer change the channel too.
+	pub fn set_instrument(&mut self, channel: u8, instrument: Instrument, time: u32) {
+		if self.current_instruments[channel as usize] != instrument {
+			self.current_instruments[channel as usize] = instrument;
+			let _ = self.transmit.send(MidiMessage::change_program(time, channel, instrument));
 		}
-
-		//Find the channel with the least recent activity.
-		let mut oldest_activity: u32 = 0;
-		let mut oldest_channel = 0;
-		for (channel, activity_timestamp) in self.most_recent_activity.iter().enumerate() {
-			if channel == 9 || channel == 10 { //Don't use the percussion or drone channels.
-				continue;
-			}
-			if *activity_timestamp < oldest_activity {
-				oldest_activity = *activity_timestamp;
-				oldest_channel = channel;
-			}
-		}
-		//Change the program of that channel to have the correct instrument.
-		_ = self.transmit.send(MidiMessage::change_program(time, oldest_channel as i32, instrument));
-		self.current_instruments[oldest_channel] = instrument;
-		self.most_recent_activity[oldest_channel] = time;
-		return 0;
 	}
 }

@@ -35,7 +35,7 @@ pub fn play(next_message: &mut Option<MidiMessage>, receiver: &mut Receiver<Midi
 					if message.time < time {
 						warn!("Accidentally skipped a MIDI message. Are messages out of order?");
 					}
-					synth.lock().unwrap().process_midi_message(message.channel, message.command, message.data1, message.data2);
+					synth.lock().unwrap().process_midi_message(message.channel as i32, message.command as i32, message.data1 as i32, message.data2 as i32);
 					*next_message = None;
 				}
 			}

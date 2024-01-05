@@ -24,7 +24,7 @@ pub struct MidiMessage {
 	pub time: u32,
 
 	/// The channel to send the MIDI message to.
-	pub channel: i32,
+	pub channel: u8,
 
 	/// The MIDI command to send.
 	///
@@ -34,7 +34,7 @@ pub struct MidiMessage {
 	/// * 0xB0: Controller.
 	/// * 0xC0: Program change.
 	/// * 0xE0: Pitch bend.
-	pub command: i32,
+	pub command: u8,
 
 	/// One of the data fields to send with the MIDI command. What this data field means depends on
 	/// the MIDI command:
@@ -60,7 +60,7 @@ pub struct MidiMessage {
 	///   - 0x7B: Stop all notes.
 	/// * Program Change: Which instrument to play on that channel.
 	/// * Pitch Bend: The least significant byte of the pitch bend adjustment.
-	pub data1: i32,
+	pub data1: u8,
 
 	/// One of the data fields to send with the MIDI command. What this data field means depends on
 	/// the MIDI command:
@@ -68,7 +68,7 @@ pub struct MidiMessage {
 	/// * Note Off: None, this is ignored.
 	/// * Controller: Depending on the first data field, this data field controls the magnitude of
 	/// that effect.
-	pub data2: i32,
+	pub data2: u8,
 }
 
 impl MidiMessage {
@@ -83,7 +83,7 @@ impl MidiMessage {
 	///
 	/// # Returns
 	/// Returns a MIDI message that can be sent to the synthesizer.
-	pub fn note_on(time: u32, channel: i32, pitch: i32, velocity: i32) -> MidiMessage {
+	pub fn note_on(time: u32, channel: u8, pitch: u8, velocity: u8) -> MidiMessage {
 		MidiMessage {
 			time: time,
 			channel: channel,
@@ -102,7 +102,7 @@ impl MidiMessage {
 	///
 	/// # Returns
 	/// Returns a MIDI message that can be sent to the synthesizer.
-	pub fn note_off(time: u32, channel: i32, pitch: i32) -> MidiMessage {
+	pub fn note_off(time: u32, channel: u8, pitch: u8) -> MidiMessage {
 		MidiMessage {
 			time: time,
 			channel: channel,
@@ -121,12 +121,12 @@ impl MidiMessage {
 	///
 	/// # Returns
 	/// Returns a MIDI message that can be sent to the synthesizer.
-	pub fn change_program(time: u32, channel: i32, instrument: Instrument) -> MidiMessage {
+	pub fn change_program(time: u32, channel: u8, instrument: Instrument) -> MidiMessage {
 		MidiMessage {
 			time: time,
 			channel: channel,
 			command: 0xC0, //Program change.
-			data1: instrument as i32,
+			data1: instrument as u8,
 			data2: 0
 		}
 	}
@@ -139,7 +139,7 @@ impl MidiMessage {
 	///
 	/// # Returns
 	/// Returns a MIDI message that can be sent to the synthesizer.
-	pub fn stop_all_notes(time: u32, channel: i32) -> MidiMessage {
+	pub fn stop_all_notes(time: u32, channel: u8) -> MidiMessage {
 		MidiMessage {
 			time: time,
 			channel: channel,
